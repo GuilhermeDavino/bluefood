@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.blue.bluefood.domain.exception.EntidadeEmUsoException;
 import com.blue.bluefood.domain.exception.EntidadeNaoEncontradaException;
 import com.blue.bluefood.domain.model.Estado;
 import com.blue.bluefood.domain.repository.EstadoRepository;
@@ -63,6 +65,17 @@ public class EstadoController {
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 		}
-		
+	}
+	
+	@DeleteMapping(value = "/{id}")
+	public ResponseEntity<?> deletar(@PathVariable Long id) {
+		try {
+			estadoService.deletar(id);
+			return ResponseEntity.noContent().build();
+		} catch (EntidadeNaoEncontradaException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+		} catch (EntidadeEmUsoException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+		}
 	}
 }
