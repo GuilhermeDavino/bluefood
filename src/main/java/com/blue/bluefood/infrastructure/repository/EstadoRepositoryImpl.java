@@ -7,6 +7,7 @@ import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Component;
 
+import com.blue.bluefood.domain.exception.EntidadeNaoEncontradaException;
 import com.blue.bluefood.domain.model.Estado;
 import com.blue.bluefood.domain.repository.EstadoRepository;
 
@@ -24,7 +25,9 @@ public class EstadoRepositoryImpl implements EstadoRepository {
 
 	@Override
 	public Estado buscarPorId(Long id) {
-		return manager.find(Estado.class, id);
+		Estado estado = manager.find(Estado.class, id);
+		if(estado == null) throw new EntidadeNaoEncontradaException(String.format("O estado de id %d não foi encontrado ou não existe!", id));
+		return estado;
 	}
 
 	@Override

@@ -35,6 +35,7 @@ public class RestauranteService {
 		Long cozinhaId = restauranteNovo.getCozinha().getId();
 		Cozinha cozinha = cozinhaRepository.buscarPorId(cozinhaId);
 		if(cozinha == null) throw new EntidadeNaoEncontradaException(String.format("Cozinha com id %d não encontrada", cozinhaId));
+		
 		Restaurante restaurante = restauranteRepository.buscarPorId(id);
 		BeanUtils.copyProperties(restauranteNovo, restaurante, "id");
 		restauranteNovo = restauranteRepository.salvar(restaurante);
