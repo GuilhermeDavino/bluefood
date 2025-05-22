@@ -29,7 +29,7 @@ public class CidadeRepositoryImpl implements CidadeRepository {
 	}
 
 	@Override
-	public Cidade adicionar(Cidade cidade) {
+	public Cidade salvar(Cidade cidade) {
 		
 		return manager.merge(cidade);
 	}

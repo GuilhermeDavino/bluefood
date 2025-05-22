@@ -38,8 +38,8 @@ public class BluefoodApiApplication implements CommandLineRunner {
 		cozinha1.setNome("Brasileira");
 		cozinha2.setNome("Americana");
 		
-		cozinha1 = cadastro.adicionar(cozinha1);
-		cozinha2 = cadastro.adicionar(cozinha2);
+		cozinha1 = cadastro.salvar(cozinha1);
+		cozinha2 = cadastro.salvar(cozinha2);
 		
 		System.out.printf("%d - %s%n", cozinha1.getId(), cozinha1.getNome());
 		System.out.printf("%d - %s%n", cozinha2.getId(), cozinha2.getNome());

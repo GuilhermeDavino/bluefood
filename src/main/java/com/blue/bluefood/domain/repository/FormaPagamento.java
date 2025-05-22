@@ -8,7 +8,7 @@ public interface FormaPagamento {
 	
 	FormaPagamento porId(Long id);
 	
-	FormaPagamento adicionar(FormaPagamento obj);
+	FormaPagamento salvar(FormaPagamento obj);
 	
 	void remover(FormaPagamento obj);
 }
