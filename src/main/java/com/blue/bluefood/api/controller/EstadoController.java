@@ -4,10 +4,12 @@ import java.net.URI;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -34,13 +36,13 @@ public class EstadoController {
 	}
 	
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<Estado> buscarPorId(@PathVariable Long id) {
-		try {
+	public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
 			Estado estado = estadoRepository.buscarPorId(id);
+			if(estado == null) {
+				String errorMessage = String.format("O estado de id %d não foi encontrado ou não existe!", id);
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
+			}
 			return ResponseEntity.ok(estado);
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.notFound().build();
-		}
 	}
 	
 	@PostMapping
@@ -51,5 +53,16 @@ public class EstadoController {
 				.buildAndExpand(estado.getId())
 				.toUri();
 		return ResponseEntity.created(uri).body(estado);
+	}
+	
+	@PutMapping(value = "/{id}")
+	public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody Estado estado) {
+		try {
+			estado = estadoService.atualizar(id, estado);
+			return ResponseEntity.ok(estado);
+		} catch (EntidadeNaoEncontradaException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+		}
+		
 	}
 }

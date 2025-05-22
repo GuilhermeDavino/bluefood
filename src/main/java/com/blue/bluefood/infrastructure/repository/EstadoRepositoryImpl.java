@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.blue.bluefood.domain.exception.EntidadeNaoEncontradaException;
 import com.blue.bluefood.domain.model.Estado;
@@ -25,18 +26,18 @@ public class EstadoRepositoryImpl implements EstadoRepository {
 
 	@Override
 	public Estado buscarPorId(Long id) {
-		Estado estado = manager.find(Estado.class, id);
-		if(estado == null) throw new EntidadeNaoEncontradaException(String.format("O estado de id %d não foi encontrado ou não existe!", id));
-		return estado;
+		return manager.find(Estado.class, id);
 	}
-
+	
+	
 	@Override
+	@Transactional
 	public Estado salvar(Estado estado) {
-		
 		return manager.merge(estado);
 	}
-
+	
 	@Override
+	@Transactional
 	public void remover(Long id) {
 		Estado estado = buscarPorId(id);
 		manager.remove(estado);

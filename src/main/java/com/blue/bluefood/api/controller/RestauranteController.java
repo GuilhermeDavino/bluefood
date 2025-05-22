@@ -44,7 +44,11 @@ public class RestauranteController {
 		
 		try {
 			restaurante = restauranteService.adicionar(restaurante);
-			URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(restaurante.getId()).toUri();
+			URI uri = ServletUriComponentsBuilder
+					.fromCurrentRequest()
+					.path("/{id}")
+					.buildAndExpand(restaurante.getId())
+					.toUri();
 			return ResponseEntity.created(uri).body(restaurante);
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.badRequest().body(e.getMessage());
