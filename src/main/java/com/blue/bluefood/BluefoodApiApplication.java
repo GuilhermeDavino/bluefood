@@ -44,7 +44,7 @@ public class BluefoodApiApplication implements CommandLineRunner {
 		System.out.printf("%d - %s%n", cozinha1.getId(), cozinha1.getNome());
 		System.out.printf("%d - %s%n", cozinha2.getId(), cozinha2.getNome());
 		
-		Cozinha cozinha3 = cadastro.porId(1L);
+		Cozinha cozinha3 = cadastro.buscarPorId(1L);
 		
 		System.out.printf("busca: %d - %s%n", cozinha3.getId(), cozinha3.getNome());
 		
@@ -53,7 +53,7 @@ public class BluefoodApiApplication implements CommandLineRunner {
 		 
 		System.out.printf("busca: %d - %s%n", cozinha3.getId(), cozinha3.getNome());
 		
-		Restaurante restaurante1 = restaurante.porId(3L);
+		Restaurante restaurante1 = restaurante.buscarPorId(3L);
 		
 		System.out.printf("Restaurante: %s - Frente: %.1f - Cozinha: %s %n", restaurante1.getNome(), restaurante1.getTaxaFrete(), restaurante1.getCozinha().getNome());
 	}

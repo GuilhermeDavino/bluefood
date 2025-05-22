@@ -11,7 +11,7 @@ import com.blue.bluefood.domain.model.Cozinha;
 import com.blue.bluefood.domain.repository.CozinhaRepository;
 
 @Service
-public class CadastroCozinhaService {
+public class CozinhaService {
 	@Autowired
 	private CozinhaRepository cozinhaRepository;
 	
