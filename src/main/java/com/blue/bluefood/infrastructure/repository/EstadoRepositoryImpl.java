@@ -23,7 +23,7 @@ public class EstadoRepositoryImpl implements EstadoRepository {
 	}
 
 	@Override
-	public Estado porId(Long id) {
+	public Estado buscarPorId(Long id) {
 		return manager.find(Estado.class, id);
 	}
 
@@ -34,7 +34,8 @@ public class EstadoRepositoryImpl implements EstadoRepository {
 	}
 
 	@Override
-	public void remover(Estado estado) {
+	public void remover(Long id) {
+		Estado estado = buscarPorId(id);
 		manager.remove(estado);
 		
 	}
