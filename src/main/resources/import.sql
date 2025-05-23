@@ -11,3 +11,6 @@ insert into estado(nome) values('Pernambuco');
 insert into estado(nome) values('Paraiba');
 insert into estado(nome) values('Minas Gerais');
 insert into estado(nome) values('Alagoas');
+
+insert into cidade(nome, estado_id) values("Recife", 1);
+insert into cidade(nome, estado_id) values("Olinda", 1);
