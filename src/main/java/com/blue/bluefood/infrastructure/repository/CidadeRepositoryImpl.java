@@ -23,19 +23,18 @@ public class CidadeRepositoryImpl implements CidadeRepository {
 	}
 
 	@Override
-	public Cidade porId(Long id) {
-		
+	public Cidade buscarPorId(Long id) {
 		return manager.find(Cidade.class, id);
 	}
 
 	@Override
 	public Cidade salvar(Cidade cidade) {
-		
 		return manager.merge(cidade);
 	}
 
 	@Override
-	public void remover(Cidade cidade) {
+	public void remover(Long id) {
+		Cidade cidade = buscarPorId(id);
 		manager.remove(cidade);
 		
 	}
