@@ -43,4 +43,13 @@ public class CidadeService {
 		return cidadeRepository.salvar(cidadeEntity);
 		
 	}
+	
+	public void remover(Long id) {
+		try {
+			cidadeRepository.remover(id);
+		} catch(EntidadeNaoEncontradaException e) {
+			throw new EntidadeNaoEncontradaException(String.format("A cidade de id %d não existe ou não foi encontrada!", id));
+		}
+		
+	}
 }

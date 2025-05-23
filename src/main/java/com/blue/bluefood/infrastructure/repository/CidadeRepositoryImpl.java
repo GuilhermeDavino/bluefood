@@ -8,6 +8,8 @@ import javax.persistence.PersistenceContext;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.blue.bluefood.domain.exception.EntidadeEmUsoException;
+import com.blue.bluefood.domain.exception.EntidadeNaoEncontradaException;
 import com.blue.bluefood.domain.model.Cidade;
 import com.blue.bluefood.domain.repository.CidadeRepository;
 
@@ -37,6 +39,7 @@ public class CidadeRepositoryImpl implements CidadeRepository {
 	@Override
 	public void remover(Long id) {
 		Cidade cidade = buscarPorId(id);
+		if(cidade == null) throw new EntidadeNaoEncontradaException("");
 		manager.remove(cidade);
 		
 	}
