@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +19,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.blue.bluefood.domain.exception.EntidadeNaoEncontradaException;
-import com.blue.bluefood.domain.model.Estado;
 import com.blue.bluefood.domain.model.Restaurante;
 import com.blue.bluefood.domain.repository.RestauranteRepository;
 import com.blue.bluefood.domain.service.RestauranteService;
@@ -68,11 +68,25 @@ public class RestauranteController {
 		}
 	}
 	
-	
+	@PatchMapping("/{id}")
+	public ResponseEntity<?> atualizarParcial(@PathVariable Long id, @RequestBody Map<String, Object> campos) {
+		try {
+			Restaurante restauranteEntity = restauranteRepository.buscarPorId(id);
+			if(restauranteEntity == null) return ResponseEntity.notFound().build();
+			return ResponseEntity.ok(restauranteService.atualizarParcial(id, campos));
+		} catch (EntidadeNaoEncontradaException e) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+		}
+		
+	}
+
 	
 	@DeleteMapping(value = "/{id}")
 	public ResponseEntity<Void> deletar(@PathVariable Long id) {
 		restauranteService.deletar(id);
 		return ResponseEntity.noContent().build();
 	}
+	
+	
+	
 }

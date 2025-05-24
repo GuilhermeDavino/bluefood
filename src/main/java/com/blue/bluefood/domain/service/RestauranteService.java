@@ -1,10 +1,14 @@
 package com.blue.bluefood.domain.service;
 
+import java.lang.reflect.Field;
+import java.util.Map;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ReflectionUtils;
 
 import com.blue.bluefood.domain.exception.EntidadeEmUsoException;
 import com.blue.bluefood.domain.exception.EntidadeNaoEncontradaException;
@@ -12,6 +16,7 @@ import com.blue.bluefood.domain.model.Cozinha;
 import com.blue.bluefood.domain.model.Restaurante;
 import com.blue.bluefood.domain.repository.CozinhaRepository;
 import com.blue.bluefood.domain.repository.RestauranteRepository;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class RestauranteService {
@@ -54,6 +59,27 @@ public class RestauranteService {
 					+ " pois está em uso", id));
 		}
 		
+	}
+	
+	public Restaurante atualizarParcial(Long id, Map<String, Object> campos) {
+		Restaurante restauranteEntity = restauranteRepository.buscarPorId(id);
+		if(restauranteEntity == null) throw new EntidadeNaoEncontradaException(String.format("A entidade de id %d não foi encontrada", id));
+		merge(campos, restauranteEntity);
+		restauranteEntity = atualizar(id, restauranteEntity);
+		return restauranteEntity;
+		
+	}
+	
+	private void merge(Map<String, Object> campos, Restaurante restauranteDestino) {
+		ObjectMapper objectMapper = new ObjectMapper();
+		Restaurante restauranteOrigem = objectMapper.convertValue(campos, Restaurante.class);
+		
+		campos.forEach((chave, valor) -> {
+			Field field = ReflectionUtils.findField(Restaurante.class, chave);
+			field.setAccessible(true);
+			Object novoValor = ReflectionUtils.getField(field, restauranteOrigem);
+			ReflectionUtils.setField(field, restauranteDestino, novoValor);
+		});
 	}
 	
 }
