@@ -7,13 +7,13 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.blue.bluefood.domain.model.Cozinha;
 import com.blue.bluefood.domain.repository.CozinhaRepository;
 
-@Component
+@Repository
 public class CozinhaRepositoryImpl implements CozinhaRepository {
 
 	@PersistenceContext
@@ -43,6 +43,13 @@ public class CozinhaRepositoryImpl implements CozinhaRepository {
 		Cozinha cozinha = buscarPorId(id);
 		if(cozinha == null) throw new EmptyResultDataAccessException(1);
 		manager.remove(cozinha);
+	}
+
+	@Override
+	public List<Cozinha> consultarPorNome(String nome) {
+		return manager.createQuery("from Cozinha where UPPER(nome) LIKE CONCAT('%', UPPER(:nome), '%')", Cozinha.class)
+				.setParameter("nome", nome)
+				.getResultList();
 	}
 
 }

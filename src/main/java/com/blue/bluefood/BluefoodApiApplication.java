@@ -6,13 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import com.blue.bluefood.domain.model.Cozinha;
 import com.blue.bluefood.domain.model.Restaurante;
 import com.blue.bluefood.domain.repository.CozinhaRepository;
 import com.blue.bluefood.domain.repository.RestauranteRepository;
+import com.blue.bluefood.infrastructure.repository.CustomJpaRepositoryImpl;
 
 @SpringBootApplication
+@EnableJpaRepositories(repositoryBaseClass = CustomJpaRepositoryImpl.class)
 public class BluefoodApiApplication implements CommandLineRunner {
 	
 	@Autowired

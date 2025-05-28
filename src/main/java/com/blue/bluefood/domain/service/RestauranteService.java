@@ -72,12 +72,12 @@ public class RestauranteService {
 	
 	private void merge(Map<String, Object> campos, Restaurante restauranteDestino) {
 		ObjectMapper objectMapper = new ObjectMapper();
-		Restaurante restauranteOrigem = objectMapper.convertValue(campos, Restaurante.class);
+		Restaurante restauranteNovo = objectMapper.convertValue(campos, Restaurante.class);
 		
 		campos.forEach((chave, valor) -> {
 			Field field = ReflectionUtils.findField(Restaurante.class, chave);
 			field.setAccessible(true);
-			Object novoValor = ReflectionUtils.getField(field, restauranteOrigem);
+			Object novoValor = ReflectionUtils.getField(field, restauranteNovo);
 			ReflectionUtils.setField(field, restauranteDestino, novoValor);
 		});
 	}

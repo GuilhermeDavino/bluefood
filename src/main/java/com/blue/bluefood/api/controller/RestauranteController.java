@@ -1,5 +1,9 @@
 package com.blue.bluefood.api.controller;
 
+import static com.blue.bluefood.infrastructure.repository.spec.RestauranteSpecs.comFreteGratis;
+import static com.blue.bluefood.infrastructure.repository.spec.RestauranteSpecs.comNomeSemelhante;
+
+import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -87,6 +91,16 @@ public class RestauranteController {
 		return ResponseEntity.noContent().build();
 	}
 	
+	
+	@GetMapping("/listar-por-parametros")
+	public ResponseEntity<List<Restaurante>> listarTest(String nome, BigDecimal taxaInicial, BigDecimal taxaFinal) {
+		return ResponseEntity.ok(restauranteRepository.find(nome, taxaInicial, taxaFinal));
+	}
+	
+	@GetMapping("/com-frete-gratis")
+	public ResponseEntity<List<Restaurante>> listarComFreteGratis(String nome) {
+		return ResponseEntity.ok(restauranteRepository.listarComFreteGratis(nome));
+	}
 	
 	
 }

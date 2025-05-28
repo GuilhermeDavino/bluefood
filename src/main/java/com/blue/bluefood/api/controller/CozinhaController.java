@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -38,6 +39,11 @@ public class CozinhaController {
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public List<Cozinha> listar() {
 		return cozinhaRepository.todas();
+	}
+	
+	@GetMapping("consultarPorNome")
+	public List<Cozinha> listar(@RequestParam(name = "nome", defaultValue = "") String nome) {
+		return cozinhaRepository.consultarPorNome(nome);
 	}
 	
 	@GetMapping(produces = MediaType.APPLICATION_XML_VALUE)
