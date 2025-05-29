@@ -42,7 +42,8 @@ public class RestauranteService {
 		if(cozinha == null) throw new EntidadeNaoEncontradaException(String.format("Cozinha com id %d não encontrada", cozinhaId));
 		
 		Restaurante restaurante = restauranteRepository.buscarPorId(id);
-		BeanUtils.copyProperties(restauranteNovo, restaurante, "id");
+		BeanUtils.copyProperties(restauranteNovo, restaurante,
+				"id", "formaPagamento", "produtos", "dataCadastro");
 		restauranteNovo = restauranteRepository.salvar(restaurante);
 		return restauranteNovo;
 	}
