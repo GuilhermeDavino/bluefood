@@ -16,6 +16,9 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import lombok.Data;
@@ -43,18 +46,20 @@ public class Restaurante {
 	
 	@ManyToMany
 	@JoinTable(name = "restaurante_forma_pagamento",
-	joinColumns = @JoinColumn(name = "restaurante_id"),
-	inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
+	joinColumns = @JoinColumn(name = "restaurante_id", nullable = false),
+	inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id", nullable = false))
 	private Set<FormaPagamento> formasPagamento;
 	
 	@JsonIgnore
 	@OneToMany(mappedBy = "restaurante")
 	private List<Produto> produtos;
 	
-	@Column(nullable = false)
+	@CreationTimestamp
+	@Column(nullable = false, columnDefinition = "datetime")
 	private LocalDateTime dataCadastro;
 	
-	@Column(nullable = false)
+	@UpdateTimestamp
+	@Column(nullable = false, columnDefinition = "datetime")
 	private LocalDateTime dataAtualizacao;
 
 }

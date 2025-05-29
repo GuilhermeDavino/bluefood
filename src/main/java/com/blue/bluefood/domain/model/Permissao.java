@@ -1,9 +1,12 @@
 package com.blue.bluefood.domain.model;
 
+import java.util.Set;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,4 +24,7 @@ public class Permissao {
 	private String nome;
 	
 	private String descricao;
+	
+	@ManyToMany(mappedBy = "permissoes")
+	private Set<Grupo> grupos;
 }
