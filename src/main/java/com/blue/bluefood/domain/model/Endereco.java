@@ -2,6 +2,9 @@ package com.blue.bluefood.domain.model;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
 import lombok.Data;
 
@@ -18,6 +21,7 @@ public class Endereco {
 	private String complemento;
 	@Column(name = "endereco_bairro")
 	private String bairro;
-	@Column(name = "endereco_cidade")
-	private String cidade;
+	@ManyToOne
+	@JoinColumn(name = "endereco_cidade_id")
+	private Cidade cidade;
 }
