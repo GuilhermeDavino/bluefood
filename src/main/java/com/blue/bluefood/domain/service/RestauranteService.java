@@ -43,7 +43,7 @@ public class RestauranteService {
 		
 		Restaurante restaurante = restauranteRepository.buscarPorId(id);
 		BeanUtils.copyProperties(restauranteNovo, restaurante,
-				"id", "formaPagamento", "produtos", "dataCadastro");
+				"id", "formasPagamento", "produtos", "dataCadastro", "dataAtualizacao");
 		restauranteNovo = restauranteRepository.salvar(restaurante);
 		return restauranteNovo;
 	}

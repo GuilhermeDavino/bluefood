@@ -24,11 +24,13 @@ public class Grupo {
 	private Long id;
 	@Column(nullable = false)
 	private String nome;
+	
 	@ManyToMany
 	@JoinTable(name = "grupo_permissao", 
 	joinColumns = @JoinColumn(name = "grupo_id", nullable = false), 
 	inverseJoinColumns = @JoinColumn(name = "permissao_id", nullable = false))
 	private Set<Permissao> permissoes;
+	
 	@ManyToMany(mappedBy = "grupos")
 	private Set<Usuario> usuarios;
 }

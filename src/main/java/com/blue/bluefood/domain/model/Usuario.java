@@ -10,6 +10,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -34,6 +35,7 @@ public class Usuario {
 	@UpdateTimestamp
 	@Column(nullable = false, columnDefinition = "datetime")
 	private LocalDateTime dataAtualizacao;
+	@ManyToMany
 	@JoinTable(name = "usuario_grupo", 
 			joinColumns = @JoinColumn(name = "usuario_id", nullable = false), 
 			inverseJoinColumns = @JoinColumn(name = "grupo_id", nullable = false))
