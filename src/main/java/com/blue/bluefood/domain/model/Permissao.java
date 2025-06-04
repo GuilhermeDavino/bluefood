@@ -25,6 +25,4 @@ public class Permissao {
 	
 	private String descricao;
 	
-	@ManyToMany(mappedBy = "permissoes")
-	private Set<Grupo> grupos;
 }

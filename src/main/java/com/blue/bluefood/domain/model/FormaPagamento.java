@@ -24,7 +24,6 @@ public class FormaPagamento {
 	@Column(nullable = false)
 	private String descricao;
 	
-	@ManyToMany(mappedBy = "formasPagamento")
-	private Set<Restaurante> restuarantes;
+	
 
 }
