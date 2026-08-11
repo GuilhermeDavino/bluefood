@@ -11,41 +11,37 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.blue.bluefood.domain.model.Cozinha;
-import com.blue.bluefood.domain.repository.CozinhaRepository;
 
 @Repository
-public class CozinhaRepositoryImpl implements CozinhaRepository {
+public class CozinhaRepositoryImpl {
 
 	@PersistenceContext
 	private EntityManager manager;
 	
-	@Override
+	
 	public List<Cozinha> todas() {
 		TypedQuery<Cozinha> query = manager.createQuery("from Cozinha", Cozinha.class);
 		return query.getResultList();
 	}
 	
-	@Override
+	
 	public Cozinha buscarPorId(Long id) {
 		return manager.find(Cozinha.class, id);
 	}
 	
 	
 	@Transactional
-	@Override
 	public Cozinha salvar(Cozinha cozinha) {
 		return manager.merge(cozinha);
 	}
 	
 	@Transactional
-	@Override
 	public void remover(Long id) {
 		Cozinha cozinha = buscarPorId(id);
 		if(cozinha == null) throw new EmptyResultDataAccessException(1);
 		manager.remove(cozinha);
 	}
 
-	@Override
 	public List<Cozinha> consultarPorNome(String nome) {
 		return manager.createQuery("from Cozinha where UPPER(nome) LIKE CONCAT('%', UPPER(:nome), '%')", Cozinha.class)
 				.setParameter("nome", nome)

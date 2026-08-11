@@ -13,13 +13,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.blue.bluefood.domain.exception.EntidadeEmUsoException;
-import com.blue.bluefood.domain.exception.EntidadeNaoEncontradaException;
 import com.blue.bluefood.domain.model.Estado;
-import com.blue.bluefood.domain.repository.EstadoRepository;
+import com.blue.bluefood.domain.repository.EstadoRepositoryQueries;
 import com.blue.bluefood.domain.service.EstadoService;
 
 @RestController
@@ -27,7 +26,7 @@ import com.blue.bluefood.domain.service.EstadoService;
 public class EstadoController {
 	
 	@Autowired
-	private EstadoRepository estadoRepository;
+	private EstadoRepositoryQueries estadoRepository;
 	
 	@Autowired
 	private EstadoService estadoService;
@@ -38,13 +37,8 @@ public class EstadoController {
 	}
 	
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<?> buscarPorId(@PathVariable Long id) {
-			Estado estado = estadoRepository.buscarPorId(id);
-			if(estado == null) {
-				String errorMessage = String.format("O estado de id %d não foi encontrado ou não existe!", id);
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorMessage);
-			}
-			return ResponseEntity.ok(estado);
+	public Estado buscarPorId(@PathVariable("id") Long estadoId) {
+			return estadoService.buscarOuFalhar(estadoId);
 	}
 	
 	@PostMapping
@@ -58,25 +52,16 @@ public class EstadoController {
 	}
 	
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody Estado estado) {
-		try {
-			estado = estadoService.atualizar(id, estado);
-			return ResponseEntity.ok(estado);
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-		}
+	public ResponseEntity<Estado> atualizar(@PathVariable Long id, @RequestBody Estado estado) {
+		estado = estadoService.atualizar(id, estado);
+		return ResponseEntity.ok(estado);
+		
 	}
 	
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<?> deletar(@PathVariable Long id) {
-		try {
-			estadoService.deletar(id);
-			return ResponseEntity.noContent().build();
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-		} catch (EntidadeEmUsoException e) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-		}
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deletar(@PathVariable Long id) {
+		estadoService.deletar(id);	
 	}
 	
 	

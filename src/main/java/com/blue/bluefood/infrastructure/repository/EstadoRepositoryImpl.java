@@ -9,10 +9,10 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.blue.bluefood.domain.model.Estado;
-import com.blue.bluefood.domain.repository.EstadoRepository;
+import com.blue.bluefood.domain.repository.EstadoRepositoryQueries;
 
 @Repository
-public class EstadoRepositoryImpl implements EstadoRepository {
+public class EstadoRepositoryImpl implements EstadoRepositoryQueries {
 
 	@PersistenceContext
 	private EntityManager manager;

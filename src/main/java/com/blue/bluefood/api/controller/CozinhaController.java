@@ -16,12 +16,11 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.blue.bluefood.api.model.CozinhasXmlWrapper;
-import com.blue.bluefood.domain.exception.EntidadeEmUsoException;
-import com.blue.bluefood.domain.exception.EntidadeNaoEncontradaException;
 import com.blue.bluefood.domain.model.Cozinha;
 import com.blue.bluefood.domain.repository.CozinhaRepository;
 import com.blue.bluefood.domain.service.CozinhaService;
@@ -52,13 +51,8 @@ public class CozinhaController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<Cozinha> buscar(@PathVariable("id") Long id) {
-		Cozinha cozinha = cozinhaRepository.buscarPorId(id);
-		if(cozinha != null) {
-			return ResponseEntity.ok(cozinha);
-		}
-		
-		return ResponseEntity.notFound().build();
+	public Cozinha buscar(@PathVariable("id") Long cozinhaId) {
+		return cozinhaService.buscarOuFalhar(cozinhaId);
 	}
 	
 	@PostMapping
@@ -72,32 +66,19 @@ public class CozinhaController {
 	}
 	
 	@PutMapping("/{id}")
-	public ResponseEntity<Cozinha> atualizar(@PathVariable Long id, @RequestBody Cozinha cozinha) {
+	public Cozinha atualizar(@PathVariable("id") Long cozinhaId, @RequestBody Cozinha cozinha) {
 		
+		Cozinha cozinhaAtual = cozinhaService.buscarOuFalhar(cozinhaId);
+		BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
 		
-		Cozinha cozinhaAtual = cozinhaRepository.buscarPorId(id);
-		try {
-			BeanUtils.copyProperties(cozinha, cozinhaAtual, "id");
-			cozinhaAtual = cozinhaService.salvar(cozinhaAtual);
-			return ResponseEntity.ok(cozinhaAtual);
-		} catch (IllegalArgumentException e) {
-			return ResponseEntity.notFound().build();
-		}
+		return cozinhaService.salvar(cozinhaAtual);
 		
 	}
 	
 	@DeleteMapping("/{id}")
-	public ResponseEntity<Void> deletar(@PathVariable Long id) {
-		try {
-			cozinhaService.remover(id);
-			return ResponseEntity.noContent().build();
-			
-		} catch (EntidadeEmUsoException exception) {
-			return ResponseEntity.status(HttpStatus.CONFLICT).build();
-		} catch (EntidadeNaoEncontradaException exception) {
-			return ResponseEntity.notFound().build();
-		}
-		
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deletar(@PathVariable("id") Long cozinhaId) {
+		cozinhaService.remover(cozinhaId);	
 	}
 }
 

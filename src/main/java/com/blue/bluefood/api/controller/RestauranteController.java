@@ -1,15 +1,12 @@
 package com.blue.bluefood.api.controller;
 
-import static com.blue.bluefood.infrastructure.repository.spec.RestauranteSpecs.comFreteGratis;
-import static com.blue.bluefood.infrastructure.repository.spec.RestauranteSpecs.comNomeSemelhante;
-
 import java.math.BigDecimal;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.blue.bluefood.domain.exception.EntidadeNaoEncontradaException;
+import com.blue.bluefood.domain.exception.NegocioException;
 import com.blue.bluefood.domain.model.Restaurante;
 import com.blue.bluefood.domain.repository.RestauranteRepository;
 import com.blue.bluefood.domain.service.RestauranteService;
@@ -43,45 +41,39 @@ public class RestauranteController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Restaurante> buscarPorId(@PathVariable Long id) {
-		return ResponseEntity.ok(restauranteRepository.buscarPorId(id));
+		return ResponseEntity.ok(restauranteService.BuscarOuFalhar(id));
 	}
 	
 	@PostMapping
-	public ResponseEntity<?> adicionar(@RequestBody Restaurante restaurante) {
-		
-		try {
-			restaurante = restauranteService.adicionar(restaurante);
-			URI uri = ServletUriComponentsBuilder
-					.fromCurrentRequest()
-					.path("/{id}")
-					.buildAndExpand(restaurante.getId())
-					.toUri();
-			return ResponseEntity.created(uri).body(restaurante);
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
-		}
-		
+	public ResponseEntity<Restaurante> adicionar(@RequestBody Restaurante restaurante) {
+		restaurante = restauranteService.adicionar(restaurante);
+		URI uri = ServletUriComponentsBuilder
+				.fromCurrentRequest()
+				.path("/{id}")
+				.buildAndExpand(restaurante.getId())
+				.toUri();
+		return ResponseEntity.created(uri).body(restaurante);
 	}
 	
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<?> atualizar(@PathVariable Long id, @RequestBody Restaurante restaurante) {
+	public ResponseEntity<Restaurante> atualizar(@PathVariable("id") Long restauranteId, @RequestBody Restaurante restaurante) {
+		Restaurante restauranteAtual = restauranteService.BuscarOuFalhar(restauranteId);
+		BeanUtils.copyProperties(restauranteAtual, restaurante,
+				"id", "formasPagamento", "produtos",
+				"dataCadastro", "dataAtualizacao", "endereco");
 		try {
-			return ResponseEntity.ok(restauranteService.atualizar(id, restaurante));
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.badRequest().body(e.getMessage());
+			return ResponseEntity.ok(restauranteService.atualizar(restaurante));
+		} catch (EntidadeNaoEncontradaException exception) {
+			throw new NegocioException(exception.getMessage());
 		}
+	
 	}
 	
 	@PatchMapping("/{id}")
 	public ResponseEntity<?> atualizarParcial(@PathVariable Long id, @RequestBody Map<String, Object> campos) {
-		try {
-			Restaurante restauranteEntity = restauranteRepository.buscarPorId(id);
-			if(restauranteEntity == null) return ResponseEntity.notFound().build();
-			return ResponseEntity.ok(restauranteService.atualizarParcial(id, campos));
-		} catch (EntidadeNaoEncontradaException e) {
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-		}
-		
+		@SuppressWarnings("unused")
+		Restaurante restauranteEntity = restauranteService.BuscarOuFalhar(id);
+		return ResponseEntity.ok(restauranteService.atualizarParcial(id, campos));	
 	}
 
 	

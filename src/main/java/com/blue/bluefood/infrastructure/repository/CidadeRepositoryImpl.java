@@ -10,10 +10,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.blue.bluefood.domain.exception.EntidadeNaoEncontradaException;
 import com.blue.bluefood.domain.model.Cidade;
-import com.blue.bluefood.domain.repository.CidadeRepository;
+import com.blue.bluefood.domain.repository.CidadeRepositoryQueries;
 
 @Repository
-public class CidadeRepositoryImpl implements CidadeRepository {
+public class CidadeRepositoryImpl implements CidadeRepositoryQueries {
 
 	@PersistenceContext
 	private EntityManager manager;
