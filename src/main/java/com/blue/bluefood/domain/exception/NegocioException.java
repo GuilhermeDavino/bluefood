@@ -1,23 +1,24 @@
 package com.blue.bluefood.domain.exception;
 
 import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-public class NegocioException extends ResponseStatusException {
+@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+public class NegocioException extends RuntimeException {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public NegocioException(HttpStatus status, String mensagem) {
-		super(status, mensagem);
-	}
 	
 	public NegocioException(String mensagem) {
-		this(HttpStatus.BAD_REQUEST, mensagem);
+		super(mensagem);
 	}
 
+	public NegocioException(String mensagem, Throwable causa) {
+		super(mensagem, causa);
+	}
 	
 	
 	

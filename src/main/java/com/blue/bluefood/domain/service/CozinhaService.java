@@ -9,6 +9,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.blue.bluefood.domain.exception.EntidadeNaoEncontradaException;
+import com.blue.bluefood.domain.exception.CozinhaNaoEncontradaException;
 import com.blue.bluefood.domain.exception.EntidadeEmUsoException;
 import com.blue.bluefood.domain.model.Cozinha;
 import com.blue.bluefood.domain.repository.CozinhaRepository;
@@ -18,8 +19,6 @@ public class CozinhaService {
 	
 	private static final String MSG_COZINHA_EM_USO = "Cozinha de código %d não pode ser removida,"
 			+ " pois está em uso";
-
-	private static final String MSG_COZINHA_NAO_EXISTE = "A entidade de id %d não foi encontrada";
 	
 	@Autowired
 	private CozinhaRepository cozinhaRepository;
@@ -43,7 +42,7 @@ public class CozinhaService {
 		try {
 			cozinhaRepository.remover(cozinhaId);
 		} catch (EmptyResultDataAccessException exception) { 
-			throw new EntidadeNaoEncontradaException(String.format(MSG_COZINHA_NAO_EXISTE, cozinhaId));
+			throw new CozinhaNaoEncontradaException(cozinhaId, exception);
 			
 		} catch (DataIntegrityViolationException exception) {
 			
@@ -55,7 +54,7 @@ public class CozinhaService {
 	public Cozinha buscarOuFalhar(Long cozinhaId) {
 		return cozinhaRepository.findById(cozinhaId)
 				.orElseThrow(() -> 
-				new EntidadeNaoEncontradaException(String.format(MSG_COZINHA_NAO_EXISTE, cozinhaId)));
+				new CozinhaNaoEncontradaException(cozinhaId));
 	}
 	
 }

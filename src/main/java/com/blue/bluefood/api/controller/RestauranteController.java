@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.blue.bluefood.domain.exception.EntidadeNaoEncontradaException;
 import com.blue.bluefood.domain.exception.NegocioException;
+import com.blue.bluefood.domain.exception.RestauranteNaoEncontradoException;
 import com.blue.bluefood.domain.model.Restaurante;
 import com.blue.bluefood.domain.repository.RestauranteRepository;
 import com.blue.bluefood.domain.service.RestauranteService;
@@ -63,8 +63,8 @@ public class RestauranteController {
 				"dataCadastro", "dataAtualizacao", "endereco");
 		try {
 			return ResponseEntity.ok(restauranteService.atualizar(restaurante));
-		} catch (EntidadeNaoEncontradaException exception) {
-			throw new NegocioException(exception.getMessage());
+		} catch (RestauranteNaoEncontradoException exception) {
+			throw new NegocioException(exception.getMessage(), exception);
 		}
 	
 	}

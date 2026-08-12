@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import com.blue.bluefood.domain.exception.CidadeNaoEncontradaException;
 import com.blue.bluefood.domain.exception.EntidadeEmUsoException;
 import com.blue.bluefood.domain.exception.EntidadeNaoEncontradaException;
 import com.blue.bluefood.domain.model.Cidade;
@@ -15,8 +16,6 @@ public class CidadeService {
 	
 	private static final String MSG_CIDADE_EM_USO = "Cidade de código %d não pode ser removido,"
 			+ " pois está em uso";
-
-	private static final String MSG_CIDADE_NAO_ENCONTRADA = "A cidade de id %d não existe ou não foi encontrada!";
 
 	@Autowired	
 	private CidadeRepository cidadeRepository;
@@ -40,13 +39,13 @@ public class CidadeService {
 		return cidadeRepository.salvar(cidade);
 	}
 	
-	public void remover(Long id) {
+	public void remover(Long cidadeId) {
 		try {
-			cidadeRepository.remover(id);
+			cidadeRepository.remover(cidadeId);
 		} catch(EntidadeNaoEncontradaException e) {
-			throw new EntidadeNaoEncontradaException(String.format(MSG_CIDADE_NAO_ENCONTRADA, id));
+			throw new CidadeNaoEncontradaException(cidadeId, e);
 		} catch (DataIntegrityViolationException exception) {
-			throw new EntidadeEmUsoException(String.format(MSG_CIDADE_EM_USO, id));
+			throw new EntidadeEmUsoException(String.format(MSG_CIDADE_EM_USO, cidadeId));
 		}
 		
 	}
@@ -54,7 +53,6 @@ public class CidadeService {
 	public Cidade buscarOuFalhar(Long cidadeId) {
 		return cidadeRepository.findById(cidadeId)
 				.orElseThrow(() -> 
-				new EntidadeNaoEncontradaException(
-						String.format(MSG_CIDADE_NAO_ENCONTRADA, cidadeId)));
+				new CidadeNaoEncontradaException(cidadeId));
 	}
 }

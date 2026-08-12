@@ -1,6 +1,7 @@
 package com.blue.bluefood.api.controller;
 
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.BeanUtils;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +20,8 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.blue.bluefood.api.exceptionhandler.Problem;
+import com.blue.bluefood.domain.exception.EntidadeNaoEncontradaException;
 import com.blue.bluefood.domain.exception.EstadoNaoEncontradoException;
 import com.blue.bluefood.domain.exception.NegocioException;
 import com.blue.bluefood.domain.model.Cidade;
@@ -64,7 +68,7 @@ public class CidadeController {
 			BeanUtils.copyProperties(cidade, cidadeatual, "id");
 			return cidadeService.atualizar(cidade);
 		} catch (EstadoNaoEncontradoException exception) {
-			throw new NegocioException(exception.getMessage());
+			throw new NegocioException(exception.getMessage(), exception);
 		}
 		
 	}
@@ -74,5 +78,7 @@ public class CidadeController {
 	public void remover(@PathVariable Long id) {
 		cidadeService.remover(id);
 	}
+	
+	
 	
 }

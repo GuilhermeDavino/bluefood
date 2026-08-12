@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.ReflectionUtils;
 
 import com.blue.bluefood.domain.exception.EntidadeEmUsoException;
-import com.blue.bluefood.domain.exception.EntidadeNaoEncontradaException;
+import com.blue.bluefood.domain.exception.RestauranteNaoEncontradoException;
 import com.blue.bluefood.domain.model.Cozinha;
 import com.blue.bluefood.domain.model.Restaurante;
 import com.blue.bluefood.domain.repository.RestauranteRepository;
@@ -18,10 +18,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class RestauranteService {
+	
 	private static final String MSG_RESTAURANTE_EM_USO = "Restaurante de código %d não pode ser removido,"
 			+ " pois está em uso";
-
-	private static final String MSG_RESTAURANTE_NAO_ENCONTRADO = "o restaurante de id %d não foi encontrada";
 
 	@Autowired
 	private RestauranteRepository restauranteRepository;
@@ -46,15 +45,15 @@ public class RestauranteService {
 		return restauranteRepository.salvar(restaurante);
 	}
 	
-	public void deletar(Long id) {
+	public void deletar(Long restauranteId) {
 		try {
-			restauranteRepository.remover(id);
+			restauranteRepository.remover(restauranteId);
 		} catch (EmptyResultDataAccessException exception) { 
-			throw new EntidadeNaoEncontradaException(String.format(MSG_RESTAURANTE_NAO_ENCONTRADO, id));
+			throw new RestauranteNaoEncontradoException(restauranteId, exception);
 			
 		} catch (DataIntegrityViolationException exception) {
 			
-			throw new EntidadeEmUsoException(String.format(MSG_RESTAURANTE_EM_USO, id));
+			throw new EntidadeEmUsoException(String.format(MSG_RESTAURANTE_EM_USO, restauranteId));
 		}
 		
 	}
@@ -82,9 +81,7 @@ public class RestauranteService {
 	public Restaurante BuscarOuFalhar(Long restauranteId) {
 		return restauranteRepository.findById(restauranteId).
 				orElseThrow(() -> 
-				new EntidadeNaoEncontradaException(
-						String.format(MSG_RESTAURANTE_NAO_ENCONTRADO,
-								restauranteId)));
+				new RestauranteNaoEncontradoException(restauranteId));
 		
 	}
 	
