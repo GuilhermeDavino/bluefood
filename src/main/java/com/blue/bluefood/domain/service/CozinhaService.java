@@ -8,7 +8,6 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import com.blue.bluefood.domain.exception.EntidadeNaoEncontradaException;
 import com.blue.bluefood.domain.exception.CozinhaNaoEncontradaException;
 import com.blue.bluefood.domain.exception.EntidadeEmUsoException;
 import com.blue.bluefood.domain.model.Cozinha;
