@@ -5,7 +5,7 @@ import lombok.Getter;
 @Getter
 public enum ProblemType {
 	MENSAGEM_INCOMPREENSIVEL("/mensagem-incompreensivel", "Mensagem incompeensível"),
-	ENTIDADE_NAO_ENCONTRADA("/entidade-nao-encontrada", "Entidade não encontrada"),
+	RECURSO_NAO_ENCONTRADO("/recurso-nao-encontrado", "Recurso não encontrado"),
 	ENTITDADE_EM_USO("/entidade-em-uso", "Entidade em uso"),
 	ERRO_PROPRIEDADE_JSON("/erro-propriedade-json", "Propriedade JSON inválida"),
 	PARAMETRO_INVALIDO("/erro-de-parametro", "Parâmetro utilizado na URL é inválido"),
