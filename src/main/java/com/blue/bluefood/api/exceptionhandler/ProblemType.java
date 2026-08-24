@@ -7,6 +7,8 @@ public enum ProblemType {
 	MENSAGEM_INCOMPREENSIVEL("/mensagem-incompreensivel", "Mensagem incompeensível"),
 	ENTIDADE_NAO_ENCONTRADA("/entidade-nao-encontrada", "Entidade não encontrada"),
 	ENTITDADE_EM_USO("/entidade-em-uso", "Entidade em uso"),
+	ERRO_PROPRIEDADE_JSON("/erro-propriedade-json", "Propriedade JSON inválida"),
+	PARAMETRO_INVALIDO("/erro-de-parametro", "Parâmetro utilizado na URL é inválido"),
 	ERRO_NEGOCIO("/erro-negocio", "Violação de regra de negócio");
 	
 	private String title;

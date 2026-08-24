@@ -5,6 +5,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -39,8 +41,8 @@ public class RestauranteController {
 		return ResponseEntity.ok(restauranteRepository.todos());
 	}
 	
-	@GetMapping("/{id}")
-	public ResponseEntity<Restaurante> buscarPorId(@PathVariable Long id) {
+	@GetMapping("/{restauranteId}")
+	public ResponseEntity<Restaurante> buscarPorId(@PathVariable(name = "restauranteId") Long id) {
 		return ResponseEntity.ok(restauranteService.BuscarOuFalhar(id));
 	}
 	
@@ -70,10 +72,10 @@ public class RestauranteController {
 	}
 	
 	@PatchMapping("/{id}")
-	public ResponseEntity<?> atualizarParcial(@PathVariable Long id, @RequestBody Map<String, Object> campos) {
+	public ResponseEntity<?> atualizarParcial(@PathVariable Long id, @RequestBody Map<String, Object> campos, HttpServletRequest request) {
 		@SuppressWarnings("unused")
 		Restaurante restauranteEntity = restauranteService.BuscarOuFalhar(id);
-		return ResponseEntity.ok(restauranteService.atualizarParcial(id, campos));	
+		return ResponseEntity.ok(restauranteService.atualizarParcial(id, campos, request));	
 	}
 
 	
