@@ -48,7 +48,9 @@ public class RestauranteService {
 		Long cozinhaId = restaurante.getCozinha().getId();
 		@SuppressWarnings("unused")
 		Cozinha cozinha = cozinhaService.buscarOuFalhar(cozinhaId);
-		return restauranteRepository.salvar(restaurante);
+		Restaurante restauranteNovo = restauranteRepository.salvar(restaurante);
+		System.out.println(restauranteNovo.getCozinha().getNome());
+		return restauranteNovo;
 	}
 	
 	public void deletar(Long restauranteId) {

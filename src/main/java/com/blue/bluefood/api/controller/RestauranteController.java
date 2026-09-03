@@ -6,10 +6,13 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import javax.validation.groups.Default;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -21,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.blue.bluefood.core.validation.Groups;
 import com.blue.bluefood.domain.exception.NegocioException;
 import com.blue.bluefood.domain.exception.RestauranteNaoEncontradoException;
 import com.blue.bluefood.domain.model.Restaurante;
@@ -47,7 +51,7 @@ public class RestauranteController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Restaurante> adicionar(@RequestBody Restaurante restaurante) {
+	public ResponseEntity<Restaurante> adicionar(@RequestBody @Valid Restaurante restaurante) {
 		restaurante = restauranteService.adicionar(restaurante);
 		URI uri = ServletUriComponentsBuilder
 				.fromCurrentRequest()
@@ -58,13 +62,14 @@ public class RestauranteController {
 	}
 	
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<Restaurante> atualizar(@PathVariable("id") Long restauranteId, @RequestBody Restaurante restaurante) {
+	public ResponseEntity<Restaurante> atualizar(@PathVariable("id") Long restauranteId, @RequestBody @Validated({ Default.class , Groups.RestauranteId.class }) Restaurante restaurante) {
 		Restaurante restauranteAtual = restauranteService.BuscarOuFalhar(restauranteId);
-		BeanUtils.copyProperties(restauranteAtual, restaurante,
+		BeanUtils.copyProperties(restaurante, restauranteAtual,
 				"id", "formasPagamento", "produtos",
 				"dataCadastro", "dataAtualizacao", "endereco");
+		
 		try {
-			return ResponseEntity.ok(restauranteService.atualizar(restaurante));
+			return ResponseEntity.ok(restauranteService.atualizar(restauranteAtual));
 		} catch (RestauranteNaoEncontradoException exception) {
 			throw new NegocioException(exception.getMessage(), exception);
 		}

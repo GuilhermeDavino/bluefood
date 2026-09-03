@@ -1,14 +1,19 @@
 package com.blue.bluefood.api.exceptionhandler;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.TypeMismatchException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -25,9 +30,41 @@ import com.fasterxml.jackson.databind.exc.PropertyBindingException;
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 	
+	@Autowired
+	private MessageSource messageSource;
+	
 	private static final String MSG_ERRO_GENERICA_USUARIO_FINAL = "Ocorreu um erro interno inesperado no sistema. "
 			+ "Tente novamente e se o problema persistir, entre em contato "
 			+ "com o administrador do sistema";
+	
+	@Override
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(
+			MethodArgumentNotValidException ex, HttpHeaders headers, 
+			HttpStatus status, WebRequest request) {
+		
+		List<Problem.Field> problemFields = ex.getBindingResult()
+				.getFieldErrors()
+				.stream().map(fieldError -> {
+						
+						String message = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
+						return Problem.Field.builder()
+						
+						.name(fieldError.getField())
+						.userMessage(message)
+						.build();
+						})
+						.collect(Collectors.toList());
+		
+		ProblemType problemType = ProblemType.DADOS_INVALIDOS;
+		String detail = "Um ou mais campos estão inválidos. "
+				+ "Faça o preenchimento correto e tente novamente.";
+		Problem problem = createProblemBuilder(status, problemType, detail)
+				.userMessage(detail)
+				.timestamp(LocalDateTime.now())
+				.fields(problemFields).build();
+		
+		return super.handleExceptionInternal(ex, problem, headers, status, request);
+	}
 	
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<Object> handleUncaughtException(Exception exception, WebRequest request) {
@@ -37,7 +74,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		String detail = MSG_ERRO_GENERICA_USUARIO_FINAL;
 		Problem problem = createProblemBuilder(status, problemType, detail)
 				.userMessage(detail)
-				.time(LocalDateTime.now()).build();
+				.timestamp(LocalDateTime.now()).build();
 		return super.handleExceptionInternal(exception, problem, headers, status, request);
 	}
 	
@@ -53,7 +90,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		Problem problem = createProblemBuilder(status, problemType, detail)
 				.userMessage(detail)
-				.time(LocalDateTime.now()).build();
+				.timestamp(LocalDateTime.now()).build();
 		
 		return super.handleExceptionInternal(ex, problem, headers, status, request);
 	}
@@ -90,7 +127,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		Problem problem = createProblemBuilder(httpStatus, problemType, detail)
 				.userMessage(userMessage)
-				.time(LocalDateTime.now()).build();
+				.timestamp(LocalDateTime.now()).build();
 		
 		return super.handleExceptionInternal(exception, problem, new HttpHeaders(), status, request);
 	}
@@ -113,7 +150,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		String detail = "O corpo da requisição está inválido. Verifique erro de sintaxe";
 		Problem problem = createProblemBuilder(status, problemType, detail)
 				.userMessage(MSG_ERRO_GENERICA_USUARIO_FINAL)
-				.time(LocalDateTime.now()).build();
+				.timestamp(LocalDateTime.now()).build();
 		
 		return handleExceptionInternal(exception, problem,
 				new HttpHeaders(), status, request);
@@ -130,7 +167,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		String detail = String.format("Propriedade inválida. Corrigir os erros na propriedade %s", path);
 		Problem problem = createProblemBuilder(status, problemType, detail)
 				.userMessage(MSG_ERRO_GENERICA_USUARIO_FINAL)
-				.time(LocalDateTime.now()).build();
+				.timestamp(LocalDateTime.now()).build();
 		return handleExceptionInternal(rootCause, problem, headers, status, request);
 	}
 
@@ -150,7 +187,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		Problem problem = createProblemBuilder(status, problemType, detail)
 				.userMessage(MSG_ERRO_GENERICA_USUARIO_FINAL)
-				.time(LocalDateTime.now()).build();
+				.timestamp(LocalDateTime.now()).build();
 		
 		return handleExceptionInternal(exception, problem, headers, status, request);
 	}
@@ -164,7 +201,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		String detail = exception.getMessage();
 		Problem problem = createProblemBuilder(http, problemType, detail)
 				.userMessage(detail)
-				.time(LocalDateTime.now()).build();
+				.timestamp(LocalDateTime.now()).build();
 		
 		
 		return handleExceptionInternal(exception, problem,
@@ -177,7 +214,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		ProblemType problemType = ProblemType.ERRO_NEGOCIO;
 		Problem problem = createProblemBuilder(http, problemType, exception.getMessage())
 				.userMessage(exception.getMessage())
-				.time(LocalDateTime.now()).build();
+				.timestamp(LocalDateTime.now()).build();
 		
 		
 		return handleExceptionInternal(exception, problem, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
@@ -190,7 +227,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		
 		Problem problem = createProblemBuilder(http, problemType, exception.getMessage())
 				.userMessage(exception.getMessage())
-				.time(LocalDateTime.now()).build();
+				.timestamp(LocalDateTime.now()).build();
 		
 		return handleExceptionInternal(exception, problem,
 				new HttpHeaders(), HttpStatus.NOT_FOUND, request);

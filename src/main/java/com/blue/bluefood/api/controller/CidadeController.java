@@ -3,10 +3,14 @@ package com.blue.bluefood.api.controller;
 import java.net.URI;
 import java.util.List;
 
+import javax.validation.Valid;
+import javax.validation.groups.Default;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import com.blue.bluefood.core.validation.Groups;
 import com.blue.bluefood.domain.exception.EstadoNaoEncontradoException;
 import com.blue.bluefood.domain.exception.NegocioException;
 import com.blue.bluefood.domain.model.Cidade;
@@ -47,7 +52,7 @@ public class CidadeController {
 	}
 	
 	@PostMapping
-	public ResponseEntity<Cidade> adicionar(@RequestBody Cidade cidade) {
+	public ResponseEntity<Cidade> adicionar(@RequestBody @Valid Cidade cidade) {
 		cidade = cidadeService.adicionar(cidade);
 		URI uri = ServletUriComponentsBuilder
 				.fromCurrentRequest().path("/{id}")
@@ -58,7 +63,7 @@ public class CidadeController {
 	}
 	
 	@PutMapping("/{id}")
-	public Cidade atualizar(@PathVariable("id") Long cidadeId, @RequestBody Cidade cidade) {
+	public Cidade atualizar(@PathVariable("id") Long cidadeId, @RequestBody @Validated({Groups.CidadeId.class, Default.class}) Cidade cidade) {
 		try {
 			var cidadeatual = cidadeService.buscarOuFalhar(cidadeId);
 			BeanUtils.copyProperties(cidade, cidadeatual, "id");
