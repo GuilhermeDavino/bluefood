@@ -13,6 +13,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -21,6 +22,7 @@ import org.springframework.web.method.annotation.MethodArgumentTypeMismatchExcep
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import com.blue.bluefood.core.validation.ValidacaoException;
 import com.blue.bluefood.domain.exception.EntidadeEmUsoException;
 import com.blue.bluefood.domain.exception.EntidadeNaoEncontradaException;
 import com.blue.bluefood.domain.exception.NegocioException;
@@ -37,23 +39,61 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 			+ "Tente novamente e se o problema persistir, entre em contato "
 			+ "com o administrador do sistema";
 	
+	@ExceptionHandler(ValidacaoException.class)
+	public ResponseEntity<Object> handleValidacaoException(ValidacaoException exception, WebRequest request) {
+		List<Problem.Object> problemErros = 
+				exception.getBindResult().getFieldErrors().stream()
+				.map(objectError -> {
+					String name = objectError.getObjectName();
+					
+					if(objectError instanceof FieldError) {
+						name = ((FieldError) objectError).getField();
+					}
+					
+					String message = messageSource.getMessage(objectError, LocaleContextHolder.getLocale());
+					
+					return Problem.Object.builder()
+							.name(name)
+							.userMessage(message)
+							.build();
+				}).collect(Collectors.toList());
+		
+		ProblemType problemType = ProblemType.DADOS_INVALIDOS;
+		String detail = "Um ou mais campos estão inválidos. "
+				+ "Faça o preenchimento correto e tente novamente.";
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		Problem problem = createProblemBuilder(status, problemType, detail)
+				.userMessage(detail)
+				.timestamp(LocalDateTime.now())
+				.objects(problemErros).build();
+		
+		return super.handleExceptionInternal(exception, problem, new HttpHeaders(), status, request);
+	}
+			
+	
 	@Override
 	protected ResponseEntity<Object> handleMethodArgumentNotValid(
 			MethodArgumentNotValidException ex, HttpHeaders headers, 
 			HttpStatus status, WebRequest request) {
 		
-		List<Problem.Field> problemFields = ex.getBindingResult()
-				.getFieldErrors()
-				.stream().map(fieldError -> {
+		List<Problem.Object> problemErros = ex.getBindingResult()
+				.getAllErrors()
+				.stream().map(objectError -> {
 						
-						String message = messageSource.getMessage(fieldError, LocaleContextHolder.getLocale());
-						return Problem.Field.builder()
+					String message = messageSource.getMessage(objectError, LocaleContextHolder.getLocale());
+					
+					String name = objectError.getObjectName();
+					
+					if(objectError instanceof FieldError) {
+						name = ((FieldError) objectError).getField();
+					}
+					
+					return Problem.Object.builder()
+					.name(name)
+					.userMessage(message)
+					.build();
 						
-						.name(fieldError.getField())
-						.userMessage(message)
-						.build();
-						})
-						.collect(Collectors.toList());
+				}).collect(Collectors.toList());
 		
 		ProblemType problemType = ProblemType.DADOS_INVALIDOS;
 		String detail = "Um ou mais campos estão inválidos. "
@@ -61,7 +101,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		Problem problem = createProblemBuilder(status, problemType, detail)
 				.userMessage(detail)
 				.timestamp(LocalDateTime.now())
-				.fields(problemFields).build();
+				.objects(problemErros).build();
 		
 		return super.handleExceptionInternal(ex, problem, headers, status, request);
 	}

@@ -1,6 +1,7 @@
 package com.blue.bluefood.domain.model;
 
 import java.math.BigDecimal;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
@@ -28,11 +29,15 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.blue.bluefood.core.validation.Groups;
+import com.blue.bluefood.core.validation.ValorZeroIncluiDescricao;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+
+@ValorZeroIncluiDescricao(valorField = "taxaFrete", 
+descricaoField = "nome", descricaoObrigatoria = "Frete Grátis")
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
