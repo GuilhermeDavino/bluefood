@@ -1,6 +1,7 @@
 package com.blue.bluefood.domain.model;
 
 import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -31,10 +32,10 @@ public class Usuario {
 	private String senha;
 	@CreationTimestamp
 	@Column(nullable = false, columnDefinition = "datetime")
-	private LocalDateTime dataCadastro;
+	private OffsetDateTime dataCadastro;
 	@UpdateTimestamp
 	@Column(nullable = false, columnDefinition = "datetime")
-	private LocalDateTime dataAtualizacao;
+	private OffsetDateTime dataAtualizacao;
 	@ManyToMany
 	@JoinTable(name = "usuario_grupo", 
 			joinColumns = @JoinColumn(name = "usuario_id", nullable = false), 

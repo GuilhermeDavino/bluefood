@@ -2,6 +2,9 @@ package com.blue.bluefood;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.ConstraintViolationException;
 
 import org.flywaydb.core.Flyway;
@@ -32,6 +35,8 @@ import io.restassured.http.ContentType;
 @TestPropertySource("/aplication-test.properties")
 public class CadastroCozinhaIT {
 
+	private static final long ID_COZINHA_INEXISTENTE = 1000L;
+
 	@LocalServerPort
 	private int port;
 	
@@ -40,6 +45,8 @@ public class CadastroCozinhaIT {
 	
 	@Autowired
 	private DatabaseCleaner databaseCleaner;
+	
+	private List<Cozinha> cozinhas = new ArrayList<>();
 	
 	@Test
 	public void contextLoads() {
@@ -54,6 +61,7 @@ public class CadastroCozinhaIT {
 		RestAssured.port = port;
 		RestAssured.basePath = "/cozinhas";
 		databaseCleaner.clearTables();
+		prepararDados();
 	}
 	
 	@Test
@@ -68,7 +76,7 @@ public class CadastroCozinhaIT {
 	}
 	
 	@Test
-	public void shouldReturn4CozinhaWhenRetrieveCozinhas() {
+	public void shouldReturn2CozinhaWhenRetrieveCozinhas() {
 		RestAssured.enableLoggingOfRequestAndResponseIfValidationFails();
 		
 		RestAssured
@@ -77,8 +85,8 @@ public class CadastroCozinhaIT {
 		.when()
 			.get()
 		.then()
-			.body("", Matchers.hasSize(6))
-			.body("nome", Matchers.hasItems("Tailandesa", "Chilena"))
+			.body("", Matchers.hasSize(cozinhas.size()))
+			.body("nome", Matchers.hasItems(cozinhas.get(0), cozinhas.get(1)))
 			.statusCode(HttpStatus.OK.value());
 	}
 	
@@ -124,7 +132,7 @@ public class CadastroCozinhaIT {
 	
 	@Test(expected = EntidadeNaoEncontradaException.class)
 	public void shouldThrowEntidadeNaoEncontradaExceptionWhenRetrieveCozinhaNonExists() {
-		var cozinha = cozinhaService.buscarOuFalhar(1000L);
+		var cozinha = cozinhaService.buscarOuFalhar(ID_COZINHA_INEXISTENTE);
 		cozinha.getId();
 	}
 	
@@ -135,6 +143,9 @@ public class CadastroCozinhaIT {
 		var cozinha2 = new Cozinha();
 		cozinha2.setNome("Indiana");
 		cozinhaService.salvar(cozinha2);
+		cozinhas.add(cozinha1);
+		cozinhas.add(cozinha2);
+		
 	}
 
 }

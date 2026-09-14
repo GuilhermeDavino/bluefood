@@ -11,7 +11,7 @@ import javax.validation.Payload;
 
 @Target({ ElementType.TYPE })
 @Retention(RUNTIME)
-@Constraint(validatedBy = { ValorZeroIncluiDecscricaoValidator.class })
+@Constraint(validatedBy = { ValorZeroIncluiDescricaoValidator.class })
 public @interface ValorZeroIncluiDescricao {
 	
 	String message() default "{ValorZeroIncluiDescricao}";

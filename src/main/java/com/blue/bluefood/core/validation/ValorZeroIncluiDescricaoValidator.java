@@ -8,7 +8,7 @@ import javax.validation.ValidationException;
 
 import org.springframework.beans.BeanUtils;
 
-public class ValorZeroIncluiDecscricaoValidator implements ConstraintValidator<ValorZeroIncluiDescricao, Object> {
+public class ValorZeroIncluiDescricaoValidator implements ConstraintValidator<ValorZeroIncluiDescricao, Object> {
 	private String valorField;
 	private String descricaoField;
 	private String descricaoObrigatoria;

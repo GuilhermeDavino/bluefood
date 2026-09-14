@@ -40,6 +40,7 @@ public class CozinhaService {
 	public void remover(Long cozinhaId) {
 		try {
 			cozinhaRepository.remover(cozinhaId);
+			cozinhaRepository.flush();
 		} catch (EmptyResultDataAccessException exception) { 
 			throw new CozinhaNaoEncontradaException(cozinhaId, exception);
 			

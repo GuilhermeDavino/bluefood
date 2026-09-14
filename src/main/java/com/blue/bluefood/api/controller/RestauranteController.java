@@ -8,10 +8,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.validation.groups.Default;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -19,7 +17,6 @@ import org.springframework.http.server.ServletServerHttpRequest;
 import org.springframework.util.ReflectionUtils;
 import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.validation.SmartValidator;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -31,7 +28,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import com.blue.bluefood.core.validation.Groups;
+import com.blue.bluefood.api.assembler.RestauranteDTOAssembler;
+import com.blue.bluefood.api.assembler.RestauranteInputDisassembler;
+import com.blue.bluefood.api.model.RestauranteDTO;
+import com.blue.bluefood.api.model.RestauranteInputDTO;
 import com.blue.bluefood.core.validation.ValidacaoException;
 import com.blue.bluefood.domain.exception.NegocioException;
 import com.blue.bluefood.domain.exception.RestauranteNaoEncontradoException;
@@ -53,36 +53,52 @@ public class RestauranteController {
 	@Autowired
 	private SmartValidator smartValidator;
 	
+	@Autowired
+	private RestauranteDTOAssembler assembler;
+	
+	@Autowired
+	private RestauranteInputDisassembler disassembler;
+	
 	@GetMapping
-	public ResponseEntity<List<Restaurante>> listar() {
-		return ResponseEntity.ok(restauranteRepository.todos());
+	public ResponseEntity<List<RestauranteDTO>> listar() {
+		List<Restaurante> restaurantes = restauranteRepository.todos();
+		List<RestauranteDTO> restaurantesDTO = assembler.toCollectionDTO(restaurantes);
+		return ResponseEntity.ok(restaurantesDTO);
 	}
 	
 	@GetMapping("/{restauranteId}")
-	public ResponseEntity<Restaurante> buscarPorId(@PathVariable(name = "restauranteId") Long id) {
-		return ResponseEntity.ok(restauranteService.BuscarOuFalhar(id));
+	public ResponseEntity<RestauranteDTO> buscarPorId(@PathVariable(name = "restauranteId") Long id) {
+		Restaurante restaurante = restauranteService.BuscarOuFalhar(id);
+		RestauranteDTO restauranteDTO = assembler.toRestauranteDTO(restaurante);
+		return ResponseEntity.ok(restauranteDTO);
 	}
 	
 	@PostMapping
-	public ResponseEntity<Restaurante> adicionar(@RequestBody @Valid Restaurante restaurante) {
+	public ResponseEntity<RestauranteDTO> adicionar(@RequestBody @Valid RestauranteInputDTO restauranteInput) {
+		var restaurante = disassembler.toDomainObject(restauranteInput);
 		restaurante = restauranteService.adicionar(restaurante);
 		URI uri = ServletUriComponentsBuilder
 				.fromCurrentRequest()
 				.path("/{id}")
 				.buildAndExpand(restaurante.getId())
 				.toUri();
-		return ResponseEntity.created(uri).body(restaurante);
+		var restauranteDTO = assembler.toRestauranteDTO(restaurante);
+		return ResponseEntity.created(uri).body(restauranteDTO);
 	}
 	
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<Restaurante> atualizar(@PathVariable("id") Long restauranteId, @RequestBody @Validated({ Default.class , Groups.RestauranteId.class }) Restaurante restaurante) {
-		Restaurante restauranteAtual = restauranteService.BuscarOuFalhar(restauranteId);
-		BeanUtils.copyProperties(restaurante, restauranteAtual,
-				"id", "formasPagamento", "produtos",
-				"dataCadastro", "dataAtualizacao", "endereco");
+	public ResponseEntity<RestauranteDTO> atualizar(@PathVariable("id") Long restauranteId, @RequestBody @Valid RestauranteInputDTO restauranteInput) {
+		var restauranteAtual = restauranteService.BuscarOuFalhar(restauranteId);
+		disassembler.copyToDomainObject(restauranteInput, restauranteAtual);
+		//		var restaurante = disassembler.toDomainObject(restauranteInput);
+//		BeanUtils.copyProperties(restaurante, restauranteAtual,
+//				"id", "formasPagamento", "produtos",
+//				"dataCadastro", "dataAtualizacao", "endereco");
 		
 		try {
-			return ResponseEntity.ok(restauranteService.atualizar(restauranteAtual));
+			var restauranteModel = restauranteService.atualizar(restauranteAtual);
+			var restauranteDTO = assembler.toRestauranteDTO(restauranteModel);
+			return ResponseEntity.ok(restauranteDTO);
 		} catch (RestauranteNaoEncontradoException exception) {
 			throw new NegocioException(exception.getMessage(), exception);
 		}
@@ -97,8 +113,8 @@ public class RestauranteController {
 		merge(campos, restauranteEntidade, request);
 		validate(restauranteEntidade, "restaurante");
 		restauranteEntidade = restauranteService.atualizar(restauranteEntidade);
-
-		return ResponseEntity.ok(restauranteEntidade);	
+		var restauranteDTO = assembler.toRestauranteDTO(restauranteEntidade);
+		return ResponseEntity.ok(restauranteDTO);	
 	}
 
 	
@@ -110,13 +126,17 @@ public class RestauranteController {
 	
 	
 	@GetMapping("/listar-por-parametros")
-	public ResponseEntity<List<Restaurante>> listarTest(String nome, BigDecimal taxaInicial, BigDecimal taxaFinal) {
-		return ResponseEntity.ok(restauranteRepository.find(nome, taxaInicial, taxaFinal));
+	public ResponseEntity<List<RestauranteDTO>> listarTest(String nome, BigDecimal taxaInicial, BigDecimal taxaFinal) {
+		var restaurantes = restauranteRepository.find(nome, taxaInicial, taxaFinal);
+		var restaurantesDTO = assembler.toCollectionDTO(restaurantes);
+		return ResponseEntity.ok(restaurantesDTO);
 	}
 	
 	@GetMapping("/com-frete-gratis")
-	public ResponseEntity<List<Restaurante>> listarComFreteGratis(String nome) {
-		return ResponseEntity.ok(restauranteRepository.listarComFreteGratis(nome));
+	public ResponseEntity<List<RestauranteDTO>> listarComFreteGratis(String nome) {
+		var restaurantes = restauranteRepository.listarComFreteGratis(nome);
+		var restaurantesDTO = assembler.toCollectionDTO(restaurantes);
+		return ResponseEntity.ok(restaurantesDTO);
 	}
 	
 	private void validate(Restaurante restaurante, String objectName) {
@@ -156,6 +176,8 @@ public class RestauranteController {
 					serverHttpRequest);
 		}
 	}
+	
+	
 	
 	
 }
