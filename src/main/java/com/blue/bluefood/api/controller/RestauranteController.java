@@ -33,8 +33,9 @@ import com.blue.bluefood.api.assembler.RestauranteInputDisassembler;
 import com.blue.bluefood.api.model.RestauranteDTO;
 import com.blue.bluefood.api.model.RestauranteInputDTO;
 import com.blue.bluefood.core.validation.ValidacaoException;
+import com.blue.bluefood.domain.exception.CidadeNaoEncontradaException;
+import com.blue.bluefood.domain.exception.CozinhaNaoEncontradaException;
 import com.blue.bluefood.domain.exception.NegocioException;
-import com.blue.bluefood.domain.exception.RestauranteNaoEncontradoException;
 import com.blue.bluefood.domain.model.Restaurante;
 import com.blue.bluefood.domain.repository.RestauranteRepository;
 import com.blue.bluefood.domain.service.RestauranteService;
@@ -75,31 +76,33 @@ public class RestauranteController {
 	
 	@PostMapping
 	public ResponseEntity<RestauranteDTO> adicionar(@RequestBody @Valid RestauranteInputDTO restauranteInput) {
-		var restaurante = disassembler.toDomainObject(restauranteInput);
-		restaurante = restauranteService.adicionar(restaurante);
-		URI uri = ServletUriComponentsBuilder
-				.fromCurrentRequest()
-				.path("/{id}")
-				.buildAndExpand(restaurante.getId())
-				.toUri();
-		var restauranteDTO = assembler.toRestauranteDTO(restaurante);
-		return ResponseEntity.created(uri).body(restauranteDTO);
+		try {
+			var restaurante = disassembler.toDomainObject(restauranteInput);
+			restaurante = restauranteService.adicionar(restaurante);
+			URI uri = ServletUriComponentsBuilder
+					.fromCurrentRequest()
+					.path("/{id}")
+					.buildAndExpand(restaurante.getId())
+					.toUri();
+			var restauranteDTO = assembler.toRestauranteDTO(restaurante);
+			return ResponseEntity.created(uri).body(restauranteDTO);
+		} catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException exception) {
+			throw new NegocioException(exception.getMessage(), exception);
+		}
+		
 	}
 	
 	@PutMapping(value = "/{id}")
 	public ResponseEntity<RestauranteDTO> atualizar(@PathVariable("id") Long restauranteId, @RequestBody @Valid RestauranteInputDTO restauranteInput) {
-		var restauranteAtual = restauranteService.BuscarOuFalhar(restauranteId);
-		disassembler.copyToDomainObject(restauranteInput, restauranteAtual);
-		//		var restaurante = disassembler.toDomainObject(restauranteInput);
-//		BeanUtils.copyProperties(restaurante, restauranteAtual,
-//				"id", "formasPagamento", "produtos",
-//				"dataCadastro", "dataAtualizacao", "endereco");
 		
 		try {
-			var restauranteModel = restauranteService.atualizar(restauranteAtual);
-			var restauranteDTO = assembler.toRestauranteDTO(restauranteModel);
+			var restauranteAtual = restauranteService.BuscarOuFalhar(restauranteId);
+			disassembler.copyToDomainObject(restauranteInput, restauranteAtual);
+			
+			var restauranteDTO = assembler.toRestauranteDTO(restauranteService.atualizar(restauranteAtual));
 			return ResponseEntity.ok(restauranteDTO);
-		} catch (RestauranteNaoEncontradoException exception) {
+		} catch (CozinhaNaoEncontradaException | CidadeNaoEncontradaException exception) {
+			
 			throw new NegocioException(exception.getMessage(), exception);
 		}
 	
@@ -137,6 +140,18 @@ public class RestauranteController {
 		var restaurantes = restauranteRepository.listarComFreteGratis(nome);
 		var restaurantesDTO = assembler.toCollectionDTO(restaurantes);
 		return ResponseEntity.ok(restaurantesDTO);
+	}
+	
+	@PutMapping("/${restauranteId}/ativo")
+	public ResponseEntity<Void> ativarRestaurante(@PathVariable Long restauranteId) {
+		restauranteService.ativar(restauranteId);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@DeleteMapping("/${restauranteId}/inativo")
+	public ResponseEntity<Void> inativarRestaurante(@PathVariable Long restauranteId) {
+		restauranteService.inativar(restauranteId);
+		return ResponseEntity.noContent().build();
 	}
 	
 	private void validate(Restaurante restaurante, String objectName) {

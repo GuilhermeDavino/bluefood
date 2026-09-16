@@ -1,5 +1,9 @@
 package com.blue.bluefood.domain.service;
 
+import java.util.List;
+
+import javax.transaction.Transactional;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -19,12 +23,24 @@ public class EstadoService {
 	@Autowired
 	private EstadoRepository estadoRepository;
 	
+	public Estado buscarOuFalhar(Long estadoId) {
+		return estadoRepository.findById(estadoId)
+				.orElseThrow(() -> 
+				new EstadoNaoEncontradoException(estadoId));
+	}
+	
+	public List<Estado> listar() {
+		return estadoRepository.findAll();
+	}
+	
+	@Transactional
 	public Estado adicionar(Estado estado) {
 		estado.setId(null);
 		estado = estadoRepository.salvar(estado);
 		return estado;
 	}
 	
+	@Transactional
 	public Estado atualizar(Long estadoId, Estado estadoNovo) {
 		
 		Estado estado = buscarOuFalhar(estadoId);
@@ -33,6 +49,7 @@ public class EstadoService {
 		return estadoNovo;
 	} 
 	
+	@Transactional
 	public void deletar(Long estadoId) {
 		
 		try {
@@ -45,9 +62,5 @@ public class EstadoService {
 		
 	}
 	
-	public Estado buscarOuFalhar(Long estadoId) {
-		return estadoRepository.findById(estadoId)
-				.orElseThrow(() -> 
-				new EstadoNaoEncontradoException(estadoId));
-	}
+	
 }

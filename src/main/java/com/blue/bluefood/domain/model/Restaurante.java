@@ -64,6 +64,8 @@ public class Restaurante {
 	@JoinColumn(name = "cozinha_id", nullable = false)
 	private Cozinha cozinha;
 	
+	private Boolean ativo = Boolean.TRUE;
+	
 	@JsonIgnore
 	@Embedded
 	private Endereco endereco;
@@ -88,5 +90,13 @@ public class Restaurante {
 	@UpdateTimestamp
 	@Column(nullable = false, columnDefinition = "datetime")
 	private OffsetDateTime dataAtualizacao;
+	
+	public void ativar() {
+		this.ativo = true;
+	}
+	
+	public void inativar() {
+		this.ativo = false;
+	}
 
 }

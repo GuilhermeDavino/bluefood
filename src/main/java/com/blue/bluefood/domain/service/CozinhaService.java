@@ -2,6 +2,8 @@ package com.blue.bluefood.domain.service;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -26,10 +28,12 @@ public class CozinhaService {
 		return cozinhaRepository.findAll();
 	}
 	
+	@Transactional
 	public Cozinha salvar(Cozinha cozinha) {
 		return cozinhaRepository.salvar(cozinha);
 	}
 	
+	@Transactional
 	public Cozinha atualizar(Long cozinhaId, Cozinha cozinhaNova) {
 		var cozinhaAtual = buscarOuFalhar(cozinhaId);
 		BeanUtils.copyProperties(cozinhaNova, cozinhaAtual, "id");
@@ -37,6 +41,7 @@ public class CozinhaService {
 		return cozinhaSalva;
 	}
 	
+	@Transactional
 	public void remover(Long cozinhaId) {
 		try {
 			cozinhaRepository.remover(cozinhaId);
@@ -50,6 +55,7 @@ public class CozinhaService {
 		}
 		
 	}
+	
 	
 	public Cozinha buscarOuFalhar(Long cozinhaId) {
 		return cozinhaRepository.findById(cozinhaId)

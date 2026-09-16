@@ -1,5 +1,7 @@
 package com.blue.bluefood.domain.service;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -23,7 +25,7 @@ public class CidadeService {
 	@Autowired
 	private EstadoService estadoService;
 	
-	
+	@Transactional
 	public Cidade adicionar(Cidade cidade) {
 		Long estadoId = cidade.getEstado().getId();
 		@SuppressWarnings("unused")
@@ -32,6 +34,7 @@ public class CidadeService {
 		return cidade;
 	}
 	
+	@Transactional
 	public Cidade atualizar(Cidade cidade) {
 		Long estadoId = cidade.getEstado().getId();
 		@SuppressWarnings("unused")
@@ -39,9 +42,11 @@ public class CidadeService {
 		return cidadeRepository.salvar(cidade);
 	}
 	
+	@Transactional
 	public void remover(Long cidadeId) {
 		try {
 			cidadeRepository.remover(cidadeId);
+			cidadeRepository.flush();
 		} catch(EntidadeNaoEncontradaException e) {
 			throw new CidadeNaoEncontradaException(cidadeId, e);
 		} catch (DataIntegrityViolationException exception) {
@@ -50,6 +55,7 @@ public class CidadeService {
 		
 	}
 	
+	@Transactional
 	public Cidade buscarOuFalhar(Long cidadeId) {
 		return cidadeRepository.findById(cidadeId)
 				.orElseThrow(() -> 
