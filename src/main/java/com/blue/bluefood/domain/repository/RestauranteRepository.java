@@ -22,4 +22,6 @@ RestauranteRepositoryQueries, JpaSpecificationExecutor<Restaurante> {
 	void remover(Long id);
 	
 	List<Restaurante> find(String nome, BigDecimal TaxaFreteInicial, BigDecimal TaxaFreteFinal);
+	
+	
 }

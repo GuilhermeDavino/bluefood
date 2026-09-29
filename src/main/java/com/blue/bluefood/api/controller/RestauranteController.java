@@ -142,13 +142,13 @@ public class RestauranteController {
 		return ResponseEntity.ok(restaurantesDTO);
 	}
 	
-	@PutMapping("/${restauranteId}/ativo")
+	@PutMapping("/{restauranteId}/ativo")
 	public ResponseEntity<Void> ativarRestaurante(@PathVariable Long restauranteId) {
 		restauranteService.ativar(restauranteId);
 		return ResponseEntity.noContent().build();
 	}
 	
-	@DeleteMapping("/${restauranteId}/inativo")
+	@DeleteMapping("/{restauranteId}/inativo")
 	public ResponseEntity<Void> inativarRestaurante(@PathVariable Long restauranteId) {
 		restauranteService.inativar(restauranteId);
 		return ResponseEntity.noContent().build();

@@ -8,9 +8,11 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import com.blue.bluefood.domain.exception.EntidadeEmUsoException;
+import com.blue.bluefood.domain.exception.ProdutoNaoEncontrado;
 import com.blue.bluefood.domain.exception.RestauranteNaoEncontradoException;
 import com.blue.bluefood.domain.model.Cidade;
 import com.blue.bluefood.domain.model.Cozinha;
+import com.blue.bluefood.domain.model.Produto;
 import com.blue.bluefood.domain.model.Restaurante;
 import com.blue.bluefood.domain.repository.RestauranteRepository;
 
@@ -28,6 +30,12 @@ public class RestauranteService {
 	
 	@Autowired
 	private CidadeService cidadeService;
+	
+	@Autowired
+	private FormaPagamentoService formaPagamentoService;
+	
+	@Autowired
+	private ProdutoService produtoService;
 	
 	@Transactional
 	public Restaurante adicionar(Restaurante restaurante) {
@@ -76,7 +84,7 @@ public class RestauranteService {
 	
 	
 	@Transactional
-	public Restaurante BuscarOuFalhar(Long restauranteId) {
+	public Restaurante buscarOuFalhar(Long restauranteId) {
 		return restauranteRepository.findById(restauranteId).
 				orElseThrow(() -> 
 				new RestauranteNaoEncontradoException(restauranteId));
@@ -85,14 +93,54 @@ public class RestauranteService {
 	
 	@Transactional
 	public void ativar(Long restauranteId) {
-		var restaurante = BuscarOuFalhar(restauranteId);
+		var restaurante = buscarOuFalhar(restauranteId);
 		restaurante.ativar();
 	}
 	
 	@Transactional
 	public void inativar(Long restauranteId) {
-		var restaurante = BuscarOuFalhar(restauranteId);
+		var restaurante = buscarOuFalhar(restauranteId);
 		restaurante.inativar();
 	}
+	
+	@Transactional
+	public void desassociar(Long restauranteId, Long formaPagamentoId) {
+		var restaurante = buscarOuFalhar(restauranteId);
+		var formaPagamento = formaPagamentoService.buscarOuFalhar(formaPagamentoId);
+		restaurante.removerFormaPagamento(formaPagamento);
+	}
+	
+	@Transactional
+	public void associar(Long restauranteId, Long formaPagamentoId) {
+		var restaurante = buscarOuFalhar(restauranteId);
+		var formaPagamento = formaPagamentoService.buscarOuFalhar(formaPagamentoId);
+		restaurante.adicionarFormaPagamento(formaPagamento);
+	}
+	
+	@Transactional
+	public void adicionarProduto(Long restauranteId, Long ProdutoId) {
+		var restaurante = buscarOuFalhar(restauranteId);
+		var produto = produtoService.buscarOuFalhar(ProdutoId);
+		restaurante.adicionarProduto(produto);
+	}
+	
+	@Transactional
+	public void removerProduto(Long restauranteId, Long ProdutoId) {
+		var restaurante = buscarOuFalhar(restauranteId);
+		var produto = produtoService.buscarOuFalhar(ProdutoId);
+		restaurante.removerProduto(produto);
+	}
+	
+	@Transactional
+	public Produto buscarProdutoPorId(Long restauranteId, Long produtoId) {
+		var restaurante = buscarOuFalhar(restauranteId);
+		var produto = produtoService.buscarOuFalhar(produtoId);
+		if(!restaurante.contemProduto(produto)) {
+			throw new ProdutoNaoEncontrado(produtoId, restauranteId);
+		}
+		return produto;
+		
+	}
+	
 	
 }

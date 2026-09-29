@@ -1,5 +1,6 @@
 package com.blue.bluefood.api.assembler;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -21,7 +22,7 @@ public class FormaPagamentoDTOAssembler {
 		return modelMapper.map(formaPagamento, FormaPagamentoDTO.class);
 	}
 	
-	public List<FormaPagamentoDTO> toCollectionDTO(List<FormaPagamento> formasDePagamento) {
+	public List<FormaPagamentoDTO> toCollectionDTO(Collection<FormaPagamento> formasDePagamento) {
 		return formasDePagamento.stream().map(x -> toFormaPagamentoDTO(x)).collect(Collectors.toList());
 	}
 }

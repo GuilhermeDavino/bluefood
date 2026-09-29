@@ -23,7 +23,7 @@ import com.blue.bluefood.domain.service.FormaPagamentoService;
 
 
 @RestController
-@RequestMapping("/formaPagamentos")
+@RequestMapping("/formasPagamento")
 public class FormaPagamentoController {
 	
 	@Autowired
@@ -35,7 +35,7 @@ public class FormaPagamentoController {
 	@Autowired
 	private FormaPagamentoInputDisassembler disassembler;
 	
-	@GetMapping("/${id}")
+	@GetMapping("/{id}")
 	public ResponseEntity<FormaPagamentoDTO> buscarPorId(@PathVariable("id") Long formaPagamentoId) {
 		var formaPagamento = service.buscarOuFalhar(formaPagamentoId);
 		var formaPagamentoDTO = assembler.toFormaPagamentoDTO(formaPagamento);
@@ -55,14 +55,14 @@ public class FormaPagamentoController {
 		formaPagamento = service.adicionar(formaPagamento);
 		URI uri = ServletUriComponentsBuilder
 				.fromCurrentRequest()
-				.path("/${id}")
+				.path("/{id}")
 				.buildAndExpand(formaPagamento.getId())
 				.toUri();
 		var formaPagamentoDTO = assembler.toFormaPagamentoDTO(formaPagamento);
 		return ResponseEntity.created(uri).body(formaPagamentoDTO);
 	}
 	
-	@PutMapping("/${id}")
+	@PutMapping("/{id}")
 	public ResponseEntity<FormaPagamentoDTO> atualizar(
 			@PathVariable("id") Long formaPagamentoId, @RequestBody FormaPagamentoDTO formaPagamentoInputDTO) {
 		var formaPagamentoAtual = service.buscarOuFalhar(formaPagamentoId);
@@ -72,7 +72,7 @@ public class FormaPagamentoController {
 		return ResponseEntity.ok(formaPagamentoDTO);
 	}
 	
-	@DeleteMapping("/${id}")
+	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> deletar(@PathVariable("id") Long formaPagamentoId) {
 		service.deletar(formaPagamentoId);
 		return ResponseEntity.noContent().build();

@@ -1,6 +1,5 @@
 package com.blue.bluefood.domain.model;
 
-import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.util.Set;
 

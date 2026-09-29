@@ -3,8 +3,8 @@ package com.blue.bluefood.domain.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.blue.bluefood.domain.model.Estado;
+import com.blue.bluefood.domain.model.Grupo;
 @Repository
-public interface EstadoRepository extends JpaRepository<Estado, Long>, EstadoRepositoryQueries {
+public interface GrupoRepository extends JpaRepository<Grupo, Long> {
 
 }

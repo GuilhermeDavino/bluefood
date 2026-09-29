@@ -98,5 +98,30 @@ public class Restaurante {
 	public void inativar() {
 		this.ativo = false;
 	}
+	
+	public boolean removerFormaPagamento(FormaPagamento formaPagamento) {
+		return getFormasPagamento().remove(formaPagamento);
+	}
+	
+	public boolean adicionarFormaPagamento(FormaPagamento formaPagamento) {
+		return getFormasPagamento().add(formaPagamento);
+	}
+	
+	public boolean removerProduto(Produto produto) {
+		return getProdutos().remove(produto);
+	}
+	
+	public boolean adicionarProduto(Produto produto) {
+		
+		if(!contemProduto(produto)) {
+			return getProdutos().add(produto);
+		}
+		return true;
+		
+	}
+	
+	public boolean contemProduto(Produto produto) {
+		return getProdutos().contains(produto);
+	}
 
 }
