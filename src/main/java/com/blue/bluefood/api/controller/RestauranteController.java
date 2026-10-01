@@ -36,6 +36,7 @@ import com.blue.bluefood.core.validation.ValidacaoException;
 import com.blue.bluefood.domain.exception.CidadeNaoEncontradaException;
 import com.blue.bluefood.domain.exception.CozinhaNaoEncontradaException;
 import com.blue.bluefood.domain.exception.NegocioException;
+import com.blue.bluefood.domain.exception.RestauranteNaoEncontradoException;
 import com.blue.bluefood.domain.model.Restaurante;
 import com.blue.bluefood.domain.repository.RestauranteRepository;
 import com.blue.bluefood.domain.service.RestauranteService;
@@ -69,7 +70,7 @@ public class RestauranteController {
 	
 	@GetMapping("/{restauranteId}")
 	public ResponseEntity<RestauranteDTO> buscarPorId(@PathVariable(name = "restauranteId") Long id) {
-		Restaurante restaurante = restauranteService.BuscarOuFalhar(id);
+		Restaurante restaurante = restauranteService.buscarOuFalhar(id);
 		RestauranteDTO restauranteDTO = assembler.toRestauranteDTO(restaurante);
 		return ResponseEntity.ok(restauranteDTO);
 	}
@@ -96,7 +97,7 @@ public class RestauranteController {
 	public ResponseEntity<RestauranteDTO> atualizar(@PathVariable("id") Long restauranteId, @RequestBody @Valid RestauranteInputDTO restauranteInput) {
 		
 		try {
-			var restauranteAtual = restauranteService.BuscarOuFalhar(restauranteId);
+			var restauranteAtual = restauranteService.buscarOuFalhar(restauranteId);
 			disassembler.copyToDomainObject(restauranteInput, restauranteAtual);
 			
 			var restauranteDTO = assembler.toRestauranteDTO(restauranteService.atualizar(restauranteAtual));
@@ -111,7 +112,7 @@ public class RestauranteController {
 	@PatchMapping("/{id}")
 	public ResponseEntity<?> atualizarParcial(@PathVariable Long id, @RequestBody Map<String, Object> campos, HttpServletRequest request) {
 		
-		var restauranteEntidade = restauranteService.BuscarOuFalhar(id);
+		var restauranteEntidade = restauranteService.buscarOuFalhar(id);
 		
 		merge(campos, restauranteEntidade, request);
 		validate(restauranteEntidade, "restaurante");
@@ -148,9 +149,42 @@ public class RestauranteController {
 		return ResponseEntity.noContent().build();
 	}
 	
-	@DeleteMapping("/{restauranteId}/inativo")
+	@DeleteMapping("/{restauranteId}/ativo")
 	public ResponseEntity<Void> inativarRestaurante(@PathVariable Long restauranteId) {
 		restauranteService.inativar(restauranteId);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@PutMapping("/ativacoes")
+	public ResponseEntity<Void> ativarRestaurantes(@RequestBody List<Long> restauranteIds) {
+		try {
+			restauranteService.ativar(restauranteIds);
+		} catch (RestauranteNaoEncontradoException e) {
+			throw new NegocioException(e.getMessage());
+		}
+		
+		return ResponseEntity.noContent().build();
+	}
+	
+	@DeleteMapping("/ativacoes")
+	public ResponseEntity<Void> inativarRestaurantes(@RequestBody List<Long> restauranteIds) {
+		try {
+			restauranteService.inativar(restauranteIds);
+		} catch (RestauranteNaoEncontradoException e) {
+			throw new NegocioException(e.getMessage());
+		}
+		return ResponseEntity.noContent().build();
+	}
+	
+	@PutMapping("/{restauranteId}/fechamento")
+	public ResponseEntity<Void> fecharRestaurante(@PathVariable Long restauranteId) {
+		restauranteService.fecharRestaurante(restauranteId);
+		return ResponseEntity.noContent().build();
+	}
+	
+	@PutMapping("/{restauranteId}/abertura")
+	public ResponseEntity<Void> aberturaRestaurante(@PathVariable Long restauranteId) {
+		restauranteService.abrirRestaurante(restauranteId);
 		return ResponseEntity.noContent().build();
 	}
 	

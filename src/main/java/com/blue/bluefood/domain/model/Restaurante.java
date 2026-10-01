@@ -66,6 +66,9 @@ public class Restaurante {
 	
 	private Boolean ativo = Boolean.TRUE;
 	
+	@NotNull
+	private Boolean aberto;
+	
 	@JsonIgnore
 	@Embedded
 	private Endereco endereco;
@@ -90,6 +93,12 @@ public class Restaurante {
 	@UpdateTimestamp
 	@Column(nullable = false, columnDefinition = "datetime")
 	private OffsetDateTime dataAtualizacao;
+	
+	@ManyToMany
+	@JoinTable(name = "restaurante_usuario_responsavel", 
+	joinColumns = @JoinColumn(name = "restaurante_id", nullable = false), 
+	inverseJoinColumns = @JoinColumn(name = "usuario_id", nullable = false))
+	private Set<Usuario> usuarios;
 	
 	public void ativar() {
 		this.ativo = true;
@@ -122,6 +131,22 @@ public class Restaurante {
 	
 	public boolean contemProduto(Produto produto) {
 		return getProdutos().contains(produto);
+	}
+	
+	public void fechar() {
+		this.aberto = false;
+	}
+	
+	public void abrir() {
+		this.aberto = true;
+	}
+	
+	public boolean adicionarResponsavel(Usuario responsavel) {
+		return getUsuarios().add(responsavel);
+	}
+	
+	public boolean removerResponsavel(Usuario responsavel) {
+		return getUsuarios().remove(responsavel);
 	}
 
 }

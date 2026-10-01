@@ -28,7 +28,7 @@ public class RestauranteFormaPagamentoController {
 	
 	@GetMapping
 	public ResponseEntity<List<FormaPagamentoDTO>> listar(@PathVariable Long restauranteId) {
-		var restaurante = restauranteService.BuscarOuFalhar(restauranteId);
+		var restaurante = restauranteService.buscarOuFalhar(restauranteId);
 		var formasPagamento = restaurante.getFormasPagamento();
 		var formasPagamentosDTO = assembler.toCollectionDTO(formasPagamento);
 		return ResponseEntity.ok(formasPagamentosDTO);
