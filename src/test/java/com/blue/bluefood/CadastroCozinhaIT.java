@@ -40,6 +40,7 @@ public class CadastroCozinhaIT {
 	@LocalServerPort
 	private int port;
 	
+	@SuppressWarnings("unused")
 	@Autowired
 	private Flyway flyway;
 	
