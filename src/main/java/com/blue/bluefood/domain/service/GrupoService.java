@@ -1,5 +1,6 @@
 package com.blue.bluefood.domain.service;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.blue.bluefood.domain.exception.EntidadeNaoEncontradaException;
 import com.blue.bluefood.domain.exception.GrupoNaoEncontradoException;
 import com.blue.bluefood.domain.model.Grupo;
+import com.blue.bluefood.domain.model.Permissao;
 import com.blue.bluefood.domain.repository.GrupoRepository;
 
 @Service
@@ -21,6 +23,9 @@ public class GrupoService {
 	
 	@Autowired
 	private GrupoRepository grupoRepository;
+	
+	@Autowired
+	private PermissaoService permissaoService;
 	
 	public Grupo buscarOuFalhar(Long grupoId) {
 		return grupoRepository.findById(grupoId)
@@ -54,5 +59,25 @@ public class GrupoService {
 			throw new EntidadeNaoEncontradaException(
 					String.format(MSG_GRUPO_EM_USO, grupoId), exception);
 		}
+	}
+	
+	@Transactional
+	public Collection<Permissao> buscarPermissoesDoGrupo(Long grupoId) {
+		var grupo = buscarOuFalhar(grupoId);
+		return grupo.getPermissoes();
+	}
+	
+	@Transactional
+	public void associarPermissaoAoGrupo(Long grupoId, Long permissaoId) {
+		var permissao = permissaoService.buscarOuFalhar(permissaoId);
+		var grupo = buscarOuFalhar(grupoId);
+		grupo.associarPermissao(permissao);
+	}
+	
+	@Transactional
+	public void desassociarPermissaoAoGrupo(Long grupoId, Long permissaoId) {
+		var permissao = permissaoService.buscarOuFalhar(permissaoId);
+		var grupo = buscarOuFalhar(grupoId);
+		grupo.desassociarPermissao(permissao);
 	}
 }

@@ -31,5 +31,13 @@ public class Grupo {
 	inverseJoinColumns = @JoinColumn(name = "permissao_id", nullable = false))
 	private Set<Permissao> permissoes;
 	
+	public boolean associarPermissao(Permissao permissao) {
+		return permissoes.add(permissao);
+	}
+	
+	public boolean desassociarPermissao(Permissao permissao) {
+		return permissoes.remove(permissao);
+	}
+	
 	
 }
