@@ -15,9 +15,31 @@ public class ProdutoService {
 	@Autowired
 	private ProdutoRepository repository;
 	
+	@Autowired
+	private RestauranteService restauranteService;
+	
 	@Transactional
 	public Produto buscarOuFalhar(Long produtoId) {
 		return repository.findById(produtoId).orElseThrow(
 				() -> new ProdutoNaoEncontrado(produtoId));
 	}
+	
+	@Transactional
+	public Produto buscarProdutoPorRestaurante(Long produtoId, Long restauranteId) {
+		return repository.findById(restauranteId, produtoId).orElseThrow(
+				() -> new ProdutoNaoEncontrado(produtoId, restauranteId));
+	}
+	
+	@Transactional
+	public Produto adicionar(Long restauranteId, Produto produtoInput) {
+		var restaurante = restauranteService.buscarOuFalhar(restauranteId);
+		produtoInput.setRestaurante(restaurante);
+		return repository.save(produtoInput);
+	}
+	
+	@Transactional
+	public Produto atualizar(Produto produtoInput) {
+		return repository.save(produtoInput);
+	}
+	
 }
