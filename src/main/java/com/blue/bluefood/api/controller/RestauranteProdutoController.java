@@ -1,18 +1,26 @@
 package com.blue.bluefood.api.controller;
 
+import java.net.URI;
 import java.util.List;
+
+import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.blue.bluefood.api.assembler.ProdutoDTOAssembler;
+import com.blue.bluefood.api.assembler.ProdutoInputDisassembler;
 import com.blue.bluefood.api.model.ProdutoDTO;
+import com.blue.bluefood.api.model.ProdutoInputDTO;
+import com.blue.bluefood.domain.service.ProdutoService;
 import com.blue.bluefood.domain.service.RestauranteService;
 
 @RestController
@@ -23,7 +31,13 @@ public class RestauranteProdutoController {
 	private RestauranteService restauranteService;
 	
 	@Autowired
+	private ProdutoService produtoService;
+	
+	@Autowired
 	private ProdutoDTOAssembler produtoAssembler;
+	
+	@Autowired
+	private ProdutoInputDisassembler produtoDisassembler;
 	
 	@GetMapping
 	public ResponseEntity<List<ProdutoDTO>> listar(@PathVariable Long restauranteId) {
@@ -40,15 +54,26 @@ public class RestauranteProdutoController {
 		return ResponseEntity.ok(produtoDTO);
 	}
 	
-	@PutMapping("/{produtoId}")
-	public ResponseEntity<Void> adicionarProdutoAoRestaurante(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
-		restauranteService.adicionarProduto(restauranteId, produtoId);
-		return ResponseEntity.noContent().build();
+	@PostMapping
+	public ResponseEntity<ProdutoDTO> adicionarProdutoAoRestaurante(@PathVariable Long restauranteId, @RequestBody @Valid ProdutoInputDTO produtoInput) {
+		var produto = produtoDisassembler.toDomainObject(produtoInput);
+		produto = produtoService.adicionar(restauranteId, produto);
+		URI uri = ServletUriComponentsBuilder
+				.fromCurrentRequest()
+				.path("/{id}")
+				.buildAndExpand(produto.getId())
+				.toUri();
+		
+		var produtoDTO = produtoAssembler.toProdutoDTO(produto);
+		return ResponseEntity.created(uri).body(produtoDTO);
 	}
 	
-	@DeleteMapping("/{produtoId}")
-	public ResponseEntity<Void> removerProdutoAoRestaurante(@PathVariable Long restauranteId, @PathVariable Long produtoId) {
-		restauranteService.removerProduto(restauranteId, produtoId);
-		return ResponseEntity.noContent().build();
+	@PutMapping("/{produtoId}")
+	public ResponseEntity<ProdutoDTO> atualizarProduto(@PathVariable Long restauranteId, @PathVariable Long produtoId, @RequestBody @Valid ProdutoInputDTO produtoInput) {
+		var produto = produtoService.buscarProdutoPorRestaurante(produtoId, restauranteId);
+		produtoDisassembler.copyToDomainObject(produtoInput, produto);
+		produto = produtoService.atualizar(produto);
+		var produtoDTO = produtoAssembler.toProdutoDTO(produto);
+		return ResponseEntity.ok(produtoDTO);
 	}
 }
