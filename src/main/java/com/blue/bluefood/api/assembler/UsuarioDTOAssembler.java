@@ -1,5 +1,6 @@
 package com.blue.bluefood.api.assembler;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,7 +20,7 @@ public class UsuarioDTOAssembler {
 		return modelMapper.map(usuario, UsuarioDTO.class);
 	}
 	
-	public List<UsuarioDTO> toCollectionDTO(List<Usuario> usuarios) {
+	public List<UsuarioDTO> toCollectionDTO(Collection<Usuario> usuarios) {
 		return usuarios.stream()
 				.map(x -> toUsuarioDTO(x))
 				.collect(Collectors.toList());

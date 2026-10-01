@@ -1,5 +1,6 @@
 package com.blue.bluefood.domain.service;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.transaction.Transactional;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import com.blue.bluefood.domain.exception.EntidadeEmUsoException;
 import com.blue.bluefood.domain.exception.NegocioException;
 import com.blue.bluefood.domain.exception.UsuarioNaoEncontradoException;
+import com.blue.bluefood.domain.model.Grupo;
 import com.blue.bluefood.domain.model.Usuario;
 import com.blue.bluefood.domain.repository.UsuarioRepository;
 
@@ -20,6 +22,9 @@ public class UsuarioService {
 	
 	@Autowired
 	private UsuarioRepository usuarioRepository;
+	
+	@Autowired
+	private GrupoService grupoService;
 	
 	public Usuario buscarOuFalhar(Long usuarioId) {
 		return usuarioRepository.findById(usuarioId).orElseThrow(
@@ -58,5 +63,26 @@ public class UsuarioService {
 		} catch (DataIntegrityViolationException exception) {
 			throw new EntidadeEmUsoException(String.format("O usuario de id %id está em uso", usuarioId));
 		}
+	}
+	
+	@Transactional
+	public Collection<Grupo> listarGrupos(Long usuarioId) {
+		var usuario = buscarOuFalhar(usuarioId);
+		var grupos = usuario.getGrupos();
+		return grupos;
+	}
+	
+	@Transactional
+	public void associarGrupoAoUsuario(Long usuarioId, Long grupoId) {
+		var usuario = buscarOuFalhar(usuarioId);
+		var grupo = grupoService.buscarOuFalhar(grupoId);
+		usuario.adicionarGrupo(grupo);
+	}
+	
+	@Transactional
+	public void desassociarGrupoAoUsuario(Long usuarioId, Long grupoId) {
+		var usuario = buscarOuFalhar(usuarioId);
+		var grupo = grupoService.buscarOuFalhar(grupoId);
+		usuario.removerGrupo(grupo);
 	}
 }

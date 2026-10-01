@@ -40,4 +40,21 @@ public class Usuario {
 			joinColumns = @JoinColumn(name = "usuario_id", nullable = false), 
 			inverseJoinColumns = @JoinColumn(name = "grupo_id", nullable = false))
 	private Set<Grupo> grupos;
+	
+	public boolean senhaCoincideCom(String senha) {
+		return getSenha().equals(senha);
+	}
+	
+	public boolean senhaNaoCoincideCom(String senha) {
+		return !senhaCoincideCom(senha);
+	}
+	
+	
+	public boolean adicionarGrupo(Grupo grupo) {
+		return getGrupos().add(grupo);
+	}
+	
+	public boolean removerGrupo(Grupo grupo) {
+		return getGrupos().remove(grupo);
+	}
 }
