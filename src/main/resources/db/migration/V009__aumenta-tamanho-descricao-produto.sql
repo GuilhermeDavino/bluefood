@@ -1,0 +1,2 @@
+ALTER TABLE produto
+MODIFY descricao VARCHAR(255) NOT NULL;
