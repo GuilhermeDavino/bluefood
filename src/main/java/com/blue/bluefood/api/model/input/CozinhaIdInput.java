@@ -1,4 +1,4 @@
-package com.blue.bluefood.api.model;
+package com.blue.bluefood.api.model.input;
 
 import javax.validation.constraints.NotNull;
 

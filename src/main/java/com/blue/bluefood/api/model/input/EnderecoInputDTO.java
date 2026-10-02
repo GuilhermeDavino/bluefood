@@ -1,4 +1,4 @@
-package com.blue.bluefood.api.model;
+package com.blue.bluefood.api.model.input;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
@@ -26,5 +26,5 @@ public class EnderecoInputDTO {
 	
 	@Valid
 	@NotNull
-	private CidadeInputDTO cidade;
+	private CidadeInputIdDTO cidade;
 }

@@ -31,7 +31,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.blue.bluefood.api.assembler.RestauranteDTOAssembler;
 import com.blue.bluefood.api.assembler.RestauranteInputDisassembler;
 import com.blue.bluefood.api.model.RestauranteDTO;
-import com.blue.bluefood.api.model.RestauranteInputDTO;
+import com.blue.bluefood.api.model.input.RestauranteInputDTO;
 import com.blue.bluefood.core.validation.ValidacaoException;
 import com.blue.bluefood.domain.exception.CidadeNaoEncontradaException;
 import com.blue.bluefood.domain.exception.CozinhaNaoEncontradaException;

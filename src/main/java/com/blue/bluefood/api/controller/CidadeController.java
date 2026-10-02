@@ -22,7 +22,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.blue.bluefood.api.assembler.CidadeDTOAssembler;
 import com.blue.bluefood.api.assembler.CidadeInputDisassembler;
 import com.blue.bluefood.api.model.CidadeDTO;
-import com.blue.bluefood.api.model.CidadeInputDTO;
+import com.blue.bluefood.api.model.input.CidadeInputDTO;
 import com.blue.bluefood.domain.exception.EstadoNaoEncontradoException;
 import com.blue.bluefood.domain.exception.NegocioException;
 import com.blue.bluefood.domain.model.Cidade;

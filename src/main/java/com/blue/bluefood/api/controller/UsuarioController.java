@@ -21,7 +21,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.blue.bluefood.api.assembler.UsuarioDTOAssembler;
 import com.blue.bluefood.api.assembler.UsuarioInputDisassembler;
 import com.blue.bluefood.api.model.UsuarioDTO;
-import com.blue.bluefood.api.model.UsuarioInputDTO;
+import com.blue.bluefood.api.model.input.UsuarioInputDTO;
 import com.blue.bluefood.domain.service.UsuarioService;
 
 @RestController

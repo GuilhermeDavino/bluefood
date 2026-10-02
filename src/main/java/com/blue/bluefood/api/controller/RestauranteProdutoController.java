@@ -19,7 +19,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import com.blue.bluefood.api.assembler.ProdutoDTOAssembler;
 import com.blue.bluefood.api.assembler.ProdutoInputDisassembler;
 import com.blue.bluefood.api.model.ProdutoDTO;
-import com.blue.bluefood.api.model.ProdutoInputDTO;
+import com.blue.bluefood.api.model.input.ProdutoInputDTO;
 import com.blue.bluefood.domain.service.ProdutoService;
 import com.blue.bluefood.domain.service.RestauranteService;
 

@@ -17,6 +17,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 public class ItemPedido {
+	
 	@EqualsAndHashCode.Include
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +27,8 @@ public class ItemPedido {
 	private Integer quantidade;
 	private BigDecimal precoUnitario;
 	private BigDecimal precoTotal;
-	private String observaçao;
+	
+	private String observacao;
 	
 	@ManyToOne
 	@JoinColumn(nullable = false)
@@ -35,4 +37,10 @@ public class ItemPedido {
 	@ManyToOne
 	@JoinColumn(nullable = false)
 	private Pedido pedido;
+	
+	public void calcularPrecoTotal() {
+		setPrecoUnitario(produto.getPreco());
+		var precoTotal = getPrecoUnitario().multiply(BigDecimal.valueOf(quantidade));
+		setPrecoTotal(precoTotal);
+	}
 }

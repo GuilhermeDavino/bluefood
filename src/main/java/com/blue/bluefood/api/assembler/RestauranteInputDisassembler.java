@@ -4,7 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.blue.bluefood.api.model.RestauranteInputDTO;
+import com.blue.bluefood.api.model.input.RestauranteInputDTO;
 import com.blue.bluefood.domain.model.Cidade;
 import com.blue.bluefood.domain.model.Cozinha;
 import com.blue.bluefood.domain.model.Restaurante;
