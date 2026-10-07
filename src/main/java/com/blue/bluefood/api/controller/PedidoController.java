@@ -49,9 +49,9 @@ public class PedidoController {
 		return ResponseEntity.ok(pedidosDTO);
 	}
 	
-	@GetMapping("/{pedidoId}")
-	public ResponseEntity<PedidoDTO> buscarPedidoPorId(@PathVariable Long pedidoId) {
-		var pedido = pedidoService.buscarOuFalhar(pedidoId);
+	@GetMapping("/{codigoPedido}")
+	public ResponseEntity<PedidoDTO> buscarPedidoPorId(@PathVariable String codigoPedido) {
+		var pedido = pedidoService.buscarOuFalhar(codigoPedido);
 		var pedidoDTO = pedidoAssembler.toPedidoDTO(pedido);
 		return ResponseEntity.ok(pedidoDTO);
 	}

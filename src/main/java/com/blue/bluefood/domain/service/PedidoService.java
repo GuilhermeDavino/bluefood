@@ -26,9 +26,9 @@ public class PedidoService {
 	}
 	
 	@Transactional
-	public Pedido buscarOuFalhar(Long pedidoId) {
-		return pedidoRepository.findById(pedidoId)
-				.orElseThrow(() -> new PedidoNaoEncontrado(pedidoId));
+	public Pedido buscarOuFalhar(String codigoPedido) {
+		return pedidoRepository.findByCodigo(codigoPedido)
+				.orElseThrow(() -> new PedidoNaoEncontrado(codigoPedido));
 	}
 	
 	@Transactional
