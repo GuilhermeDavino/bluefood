@@ -1,5 +1,6 @@
 package com.blue.bluefood.domain.repository;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,4 +15,7 @@ public interface ProdutoRepository extends JpaRepository<Produto, Long> {
 	
 	@Query(value = "from Produto where restaurante.id = :restaurante and id = :produto")
 	Optional<Produto> findById(@Param("restaurante") Long restaurenteId, @Param("produto") Long produtoId);
+	
+	@Query("from Produto p where p.ativo = true and p.restaurante.id = :restaurante")
+	List<Produto> buscarTodosProdutosAtivos(@Param("restaurante") Long restaurenteId);
 }

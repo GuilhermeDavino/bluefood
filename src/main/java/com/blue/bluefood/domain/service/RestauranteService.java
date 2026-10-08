@@ -44,6 +44,13 @@ public class RestauranteService {
 	private UsuarioService usuarioService;
 	
 	@Transactional
+	public List<Produto> buscarTodosProdutos(Long restauranteId) {
+		var restaurante = buscarOuFalhar(restauranteId);
+		var produtos = restaurante.getProdutos();
+		return produtos;
+	}
+	
+	@Transactional
 	public Restaurante adicionar(Restaurante restaurante) {
 		Long cozinhaId = restaurante.getCozinha().getId();
 		Long cidadeId = restaurante.getEndereco().getCidade().getId();
@@ -138,6 +145,11 @@ public class RestauranteService {
 	@Transactional
 	public Produto buscarProdutoPorId(Long restauranteId, Long produtoId) {
 		return produtoService.buscarProdutoPorRestaurante(produtoId, restauranteId);
+	}
+	
+	@Transactional
+	public List<Produto> buscarTodosProdutosAtivos(Long restauranteId) {
+		return produtoService.buscarTodosOsProdutosAtivos(restauranteId);
 	}
 	
 	@Transactional

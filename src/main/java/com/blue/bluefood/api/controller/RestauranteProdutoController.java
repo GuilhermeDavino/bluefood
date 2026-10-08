@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
@@ -20,6 +21,7 @@ import com.blue.bluefood.api.assembler.ProdutoDTOAssembler;
 import com.blue.bluefood.api.assembler.ProdutoInputDisassembler;
 import com.blue.bluefood.api.model.ProdutoDTO;
 import com.blue.bluefood.api.model.input.ProdutoInputDTO;
+import com.blue.bluefood.domain.model.Produto;
 import com.blue.bluefood.domain.service.ProdutoService;
 import com.blue.bluefood.domain.service.RestauranteService;
 
@@ -40,9 +42,13 @@ public class RestauranteProdutoController {
 	private ProdutoInputDisassembler produtoDisassembler;
 	
 	@GetMapping
-	public ResponseEntity<List<ProdutoDTO>> listar(@PathVariable Long restauranteId) {
-		var restaurante = restauranteService.buscarOuFalhar(restauranteId);
-		var produtos = restaurante.getProdutos();
+	public ResponseEntity<List<ProdutoDTO>> listar(@PathVariable Long restauranteId, @RequestParam Boolean incluirInativos) {
+		List<Produto> produtos = null;
+		if(incluirInativos) {
+			produtos = restauranteService.buscarTodosProdutos(restauranteId);
+		} else {
+			produtos = restauranteService.buscarTodosProdutosAtivos(restauranteId);
+		}
 		var produtosDTO = produtoAssembler.toCollectionDTO(produtos);
 		return ResponseEntity.ok(produtosDTO);
 	}

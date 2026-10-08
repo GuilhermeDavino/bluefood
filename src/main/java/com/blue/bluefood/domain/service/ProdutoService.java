@@ -1,5 +1,7 @@
 package com.blue.bluefood.domain.service;
 
+import java.util.List;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +30,11 @@ public class ProdutoService {
 	public Produto buscarProdutoPorRestaurante(Long produtoId, Long restauranteId) {
 		return repository.findById(restauranteId, produtoId).orElseThrow(
 				() -> new ProdutoNaoEncontrado(produtoId, restauranteId));
+	}
+	
+	@Transactional
+	public List<Produto> buscarTodosOsProdutosAtivos(Long restauranteId) {
+		return repository.buscarTodosProdutosAtivos(restauranteId);
 	}
 	
 	@Transactional
