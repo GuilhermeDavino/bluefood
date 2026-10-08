@@ -3,13 +3,16 @@ package com.blue.bluefood.api.model;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
+import com.fasterxml.jackson.annotation.JsonFilter;
+
 import lombok.Getter;
 import lombok.Setter;
+
 
 @Getter
 @Setter
 public class PedidoResumoDTO {
-	private Long id;
+	private String codigo;
 	private BigDecimal subtotal;
 	private BigDecimal taxaFrete;
 	private BigDecimal valorTotal;
