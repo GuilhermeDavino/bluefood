@@ -7,6 +7,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.blue.bluefood.domain.exception.EntidadeEmUsoException;
@@ -23,6 +24,11 @@ public class PedidoService {
 	@Transactional
 	public List<Pedido> listarPedidos() {
 		return pedidoRepository.findAll();
+	}
+	
+	@Transactional
+	public List<Pedido> listarPedidosComFiltros(Specification<Pedido> filtros) {
+		return pedidoRepository.findAll(filtros);
 	}
 	
 	@Transactional

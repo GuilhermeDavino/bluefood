@@ -20,8 +20,10 @@ import com.blue.bluefood.api.assembler.PedidoResumoDTOAssembler;
 import com.blue.bluefood.api.model.PedidoDTO;
 import com.blue.bluefood.api.model.PedidoResumoDTO;
 import com.blue.bluefood.api.model.input.PedidoInputDTO;
+import com.blue.bluefood.domain.repository.filter.PedidoFilter;
 import com.blue.bluefood.domain.service.EmissaoPedidoService;
 import com.blue.bluefood.domain.service.PedidoService;
+import com.blue.bluefood.infrastructure.repository.spec.PedidoSpecs;
 
 @RestController
 @RequestMapping("/pedidos")
@@ -43,8 +45,8 @@ public class PedidoController {
 	private PedidoResumoDTOAssembler pedidoResumoAssembler;
 	
 	@GetMapping
-	public ResponseEntity<List<PedidoResumoDTO>> listarPedidos() {
-		var pedidos = pedidoService.listarPedidos();
+	public ResponseEntity<List<PedidoResumoDTO>> pesquisarPedidos(PedidoFilter filtros) {
+		var pedidos = pedidoService.listarPedidosComFiltros(PedidoSpecs.usandoFiltro(filtros));
 		var pedidosDTO = pedidoResumoAssembler.toCollectionDTO(pedidos);
 		return ResponseEntity.ok(pedidosDTO);
 	}
