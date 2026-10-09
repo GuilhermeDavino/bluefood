@@ -17,5 +17,7 @@ public interface PedidoRepository extends CustomJpaRepository<Pedido, Long>,
 	@Query("from Pedido where codigo = :codigo")
 	Optional<Pedido> findByCodigo(String codigo);
 	
-	
+	@Query(value = "from Pedido p join fetch p.cliente join fetch p.restaurante r join fetch r.cozinha",
+			countQuery = "select count(p) from Pedido p")
+	Page<Pedido> findAll(Pageable pageble);
 }

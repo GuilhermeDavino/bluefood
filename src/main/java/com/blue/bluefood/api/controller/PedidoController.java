@@ -1,5 +1,7 @@
 package com.blue.bluefood.api.controller;
 
+import java.util.Map;
+
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +23,7 @@ import com.blue.bluefood.api.assembler.PedidoResumoDTOAssembler;
 import com.blue.bluefood.api.model.PedidoDTO;
 import com.blue.bluefood.api.model.PedidoResumoDTO;
 import com.blue.bluefood.api.model.input.PedidoInputDTO;
+import com.blue.bluefood.core.data.PageableTranslator;
 import com.blue.bluefood.domain.repository.filter.PedidoFilter;
 import com.blue.bluefood.domain.service.EmissaoPedidoService;
 import com.blue.bluefood.domain.service.PedidoService;
@@ -47,6 +50,7 @@ public class PedidoController {
 	
 	@GetMapping
 	public ResponseEntity<Page<PedidoResumoDTO>> pesquisarPedidos(PedidoFilter filtros, Pageable pageable) {
+		pageable = traduzirPageable(pageable);
 		var pedidos = pedidoService.listarPedidosComFiltros(PedidoSpecs.usandoFiltro(filtros), pageable);
 		var pedidosDTO = pedidoResumoAssembler.toCollectionDTO(pedidos.getContent());
 		return ResponseEntity.ok(new PageImpl<>(pedidosDTO, pageable, pedidos.getTotalElements()));
@@ -70,5 +74,20 @@ public class PedidoController {
 				.toUri();
 		var pedidoDTO = pedidoAssembler.toPedidoDTO(pedido);
 		return ResponseEntity.created(uri).body(pedidoDTO);
+	}
+	
+	private Pageable traduzirPageable(Pageable pageable) {
+		var mapeamento = Map.ofEntries(
+				Map.entry("codigo", "codigo"),
+				Map.entry("restauranteNome", "restaurante.nome"),
+				Map.entry("restaurante.nome", "restaurante.nome"),
+				Map.entry("restauranteId", "restaurante.id"),
+				Map.entry("clienteId", "cliente.id"),
+				Map.entry("cliente.id", "cliente.id"),
+				Map.entry("nomeCliente", "cliente.nome"),
+				Map.entry("cliente.nome", "cliente.nome"),
+				Map.entry("valorTotal", "valorTotal")
+				);
+		return PageableTranslator.translate(pageable, mapeamento);
 	}
 }
