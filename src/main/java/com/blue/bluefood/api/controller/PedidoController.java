@@ -1,10 +1,11 @@
 package com.blue.bluefood.api.controller;
 
-import java.util.List;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,10 +46,10 @@ public class PedidoController {
 	private PedidoResumoDTOAssembler pedidoResumoAssembler;
 	
 	@GetMapping
-	public ResponseEntity<List<PedidoResumoDTO>> pesquisarPedidos(PedidoFilter filtros) {
-		var pedidos = pedidoService.listarPedidosComFiltros(PedidoSpecs.usandoFiltro(filtros));
-		var pedidosDTO = pedidoResumoAssembler.toCollectionDTO(pedidos);
-		return ResponseEntity.ok(pedidosDTO);
+	public ResponseEntity<Page<PedidoResumoDTO>> pesquisarPedidos(PedidoFilter filtros, Pageable pageable) {
+		var pedidos = pedidoService.listarPedidosComFiltros(PedidoSpecs.usandoFiltro(filtros), pageable);
+		var pedidosDTO = pedidoResumoAssembler.toCollectionDTO(pedidos.getContent());
+		return ResponseEntity.ok(new PageImpl<>(pedidosDTO, pageable, pedidos.getTotalElements()));
 	}
 	
 	@GetMapping("/{codigoPedido}")

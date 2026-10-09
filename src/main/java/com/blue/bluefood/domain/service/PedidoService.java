@@ -7,6 +7,8 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -27,8 +29,8 @@ public class PedidoService {
 	}
 	
 	@Transactional
-	public List<Pedido> listarPedidosComFiltros(Specification<Pedido> filtros) {
-		return pedidoRepository.findAll(filtros);
+	public Page<Pedido> listarPedidosComFiltros(Specification<Pedido> filtros, Pageable pageable) {
+		return pedidoRepository.findAll(filtros, pageable);
 	}
 	
 	@Transactional
