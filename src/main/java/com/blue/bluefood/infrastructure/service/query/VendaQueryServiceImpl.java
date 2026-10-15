@@ -1,4 +1,4 @@
-package com.blue.bluefood.infrastructure.service;
+package com.blue.bluefood.infrastructure.service.query;
 
 import java.util.ArrayList;
 import java.util.Date;
