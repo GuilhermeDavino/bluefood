@@ -36,6 +36,7 @@ public class PedidoSpecs {
 				predicates.add(builder.lessThanOrEqualTo(root.get("dataCriacao"), filtro.getDataCriacaoFim()));
 			}
 			
+			
 			return builder.and(predicates.toArray(new Predicate[0]));
 		};
 		
