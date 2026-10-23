@@ -1,17 +1,15 @@
 package com.blue.bluefood.infrastructure.service.storage;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 
 import com.blue.bluefood.domain.service.FotoStorageService;
 
-@Service
+
 public class LocalStorageService implements FotoStorageService {
 	
 	@Value("${bluefood.storage.local.diretorio-fotos}")
@@ -29,17 +27,20 @@ public class LocalStorageService implements FotoStorageService {
 	}
 	
 	@Override
-	public InputStream recuperar(String nomeArquivo) {
+	public FotoRecuperada recuperar(String nomeArquivo) {
 		try {
 			Path arquivoPath = getArquivoPath(nomeArquivo);
-			return Files.newInputStream(arquivoPath);
+			var fotoRecuperada = FotoRecuperada.builder()
+					.inputStream(Files.newInputStream(arquivoPath))
+					.build();
+			return fotoRecuperada;
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}
 	
 	@Override
-	public void excluir(String nomeArquivo) {
+	public void remover(String nomeArquivo) {
 		try {
 			Path path = getArquivoPath(nomeArquivo);
 			Files.deleteIfExists(path);
