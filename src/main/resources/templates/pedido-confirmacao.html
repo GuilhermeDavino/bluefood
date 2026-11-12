@@ -1,0 +1,126 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Pedido Confirmado - BlueFood</title>
+</head>
+
+<body style="margin:0; padding:0; background-color:#f1f5f9; font-family:Arial, Helvetica, sans-serif;">
+
+<table width="100%" cellpadding="0" cellspacing="0" border="0"
+      style="background-color:#f1f5f9; padding:35px 12px;">
+
+   <tr>
+       <td align="center">
+
+           <table width="560" cellpadding="0" cellspacing="0" border="0"
+                  style="width:100%; max-width:560px; background-color:#ffffff; border-radius:12px; overflow:hidden;">
+
+               <!-- HEADER -->
+               <tr>
+                   <td align="center"
+                       style="background-color:#1769e0; padding:30px 20px;">
+
+                       <h1 style="margin:0; color:#ffffff; font-size:28px;">
+                           BlueFood
+                       </h1>
+
+                   </td>
+               </tr>
+
+               <!-- CONTEÚDO -->
+               <tr>
+                   <td align="center" style="padding:40px 30px 20px;">
+
+                       <div style="width:64px; height:64px; line-height:64px;
+                                   background-color:#dcfce7; border-radius:50%;
+                                   color:#16a34a; font-size:34px; font-weight:bold;">
+                           &#10003;
+                       </div>
+
+                       <h2 style="margin:22px 0 12px; color:#172554; font-size:24px;">
+                           Pedido confirmado!
+                       </h2>
+
+                       <p style="margin:0; color:#64748b; font-size:14px; line-height:23px;">
+                           Olá, <strong style="color:#1e293b;">${pedido.cliente.nome}</strong>!
+                           <br>
+                           Seu pedido foi confirmado com sucesso.
+                           Agradecemos por escolher a BlueFood!
+                       </p>
+
+                   </td>
+               </tr>
+
+               <!-- INFORMAÇÕES -->
+               <tr>
+                   <td style="padding:25px 30px 35px;">
+
+                       <table width="100%" cellpadding="0" cellspacing="0"
+                              style="background-color:#eff6ff; border-radius:10px;">
+
+                           <tr>
+                               <td style="padding:18px 20px; border-bottom:1px solid #dbeafe;">
+                                   <p style="margin:0 0 6px; color:#64748b; font-size:12px;">
+                                       CÓDIGO DO PEDIDO
+                                   </p>
+                                   <p style="margin:0; color:#1769e0; font-size:22px; font-weight:bold;">
+                                       #${pedido.codigo}
+                                   </p>
+                               </td>
+                           </tr>
+
+                           <tr>
+                               <td style="padding:18px 20px; border-bottom:1px solid #dbeafe;">
+                                   <p style="margin:0 0 6px; color:#64748b; font-size:12px;">
+                                       DATA DE CRIAÇÃO
+                                   </p>
+                                   <p style="margin:0; color:#1e293b; font-size:15px; font-weight:bold;">
+                                       ${pedido.dataCriacao}
+                                   </p>
+                               </td>
+                           </tr>
+
+                           <tr>
+                               <td style="padding:18px 20px;">
+                                   <p style="margin:0 0 6px; color:#64748b; font-size:12px;">
+                                       DATA DE CONFIRMAÇÃO
+                                   </p>
+                                   <p style="margin:0; color:#16a34a; font-size:15px; font-weight:bold;">
+                                       ${pedido.dataConfirmacao}
+                                   </p>
+                               </td>
+                           </tr>
+
+                       </table>
+
+                   </td>
+               </tr>
+
+               <!-- FOOTER -->
+               <tr>
+                   <td align="center"
+                       style="background-color:#f8fafc; padding:24px 20px;">
+
+                       <p style="margin:0; color:#64748b; font-size:13px;">
+                           Obrigado por escolher a BlueFood!
+                       </p>
+
+                       <p style="margin:10px 0 0; color:#94a3b8; font-size:11px;">
+                           © 2026 BlueFood. Todos os direitos reservados.
+                       </p>
+
+                   </td>
+               </tr>
+
+           </table>
+
+       </td>
+   </tr>
+
+</table>
+
+</body>
+</html>

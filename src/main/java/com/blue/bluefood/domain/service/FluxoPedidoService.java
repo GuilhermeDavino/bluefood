@@ -5,16 +5,23 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.blue.bluefood.domain.repository.PedidoRepository;
+
 @Service
 public class FluxoPedidoService {
 
 	@Autowired
 	private PedidoService pedidoService;
 	
+	@Autowired
+	private PedidoRepository pedidoRepository;
+	
 	@Transactional
 	public void confirmar(String codigoPedido) {
 		var pedido = pedidoService.buscarOuFalhar(codigoPedido);
 		pedido.confirmar();
+		pedidoRepository.save(pedido);
+		
 	}
 	
 	@Transactional
