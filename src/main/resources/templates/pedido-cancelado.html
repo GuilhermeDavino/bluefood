@@ -1,0 +1,165 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Pedido Cancelado - BlueFood</title>
+</head>
+
+<body style="margin:0; padding:0; background-color:#f1f5f9;
+            font-family:Arial, Helvetica, sans-serif;">
+
+<table width="100%" cellpadding="0" cellspacing="0"
+      border="0" style="padding:30px 10px;">
+   <tr>
+       <td align="center">
+
+           <table width="600" cellpadding="0" cellspacing="0"
+                  border="0" style="max-width:600px; background:#ffffff;
+                  border-radius:12px; overflow:hidden;">
+
+               <!-- Cabeçalho -->
+               <tr>
+                   <td align="center"
+                       style="background:#1769D2; padding:28px;">
+                       <h1 style="margin:0; color:#ffffff;
+                                  font-size:28px;">
+                           BlueFood
+                       </h1>
+                       <p style="margin:6px 0 0; color:#DCEBFF;
+                                 font-size:12px;">
+                           SUA EXPERIÊNCIA É NOSSA PRIORIDADE
+                       </p>
+                   </td>
+               </tr>
+
+               <!-- Conteúdo -->
+               <tr>
+                   <td style="padding:35px 30px;">
+
+                       <h2 style="color:#172B4D; font-size:24px;
+                                  text-align:center; margin:0 0 15px;">
+                           Pedido cancelado
+                       </h2>
+
+                       <p style="color:#64748b; font-size:15px;
+                                 line-height:1.6; text-align:center;">
+                           Olá, ${pedido.cliente.nome}!<br>
+                           Infelizmente, seu pedido foi cancelado.
+                       </p>
+
+                       <!-- Informações do pedido -->
+                       <table width="100%" cellpadding="0"
+                              cellspacing="0"
+                              style="background:#f1f6fd;
+                                     border-radius:8px; padding:20px;
+                                     margin:25px 0;">
+
+                           <tr>
+                               <td style="padding:8px 0; color:#64748b;">
+                                   Pedido
+                               </td>
+                               <td align="right"
+                                   style="color:#1769D2; font-weight:bold;">
+                                   #${pedido.codigo}
+                               </td>
+                           </tr>
+
+                           <tr>
+                               <td style="padding:8px 0; color:#64748b;">
+                                   Restaurante
+                               </td>
+                               <td align="right"
+                                   style="color:#172B4D;">
+                                   ${pedido.restaurante.nome}
+                               </td>
+                           </tr>
+
+                           <tr>
+                               <td style="padding:8px 0; color:#64748b;">
+                                   Data
+                               </td>
+                               <td align="right"
+                                   style="color:#172B4D;">
+                                   ${dataCancelamento}
+                               </td>
+                           </tr>
+
+                           <tr>
+                               <td style="padding:8px 0; color:#64748b;">
+                                   Valor
+                               </td>
+                               <td align="right"
+                                   style="color:#172B4D; font-weight:bold;">
+                                   R$ ${pedido.valorTotal}
+                               </td>
+                           </tr>
+                       </table>
+
+                       <!-- Motivo -->
+                       <h3 style="color:#172B4D; font-size:16px;">
+                           Motivo do cancelamento
+                       </h3>
+
+                       <p style="color:#64748b; font-size:14px;
+                                 line-height:1.6;">
+                           Solicitação do cliente
+                       </p>
+
+                       <!-- Aviso -->
+                       <table width="100%" cellpadding="0"
+                              cellspacing="0"
+                              style="background:#eaf3ff;
+                                     border-radius:8px;
+                                     margin-top:25px;">
+                           <tr>
+                               <td style="padding:18px;">
+                                   <strong style="color:#1769D2;">
+                                       Informações sobre o reembolso
+                                   </strong>
+
+                                   <p style="color:#34577f;
+                                             font-size:13px;
+                                             line-height:1.6;
+                                             margin-bottom:0;">
+                                       Caso o pagamento já tenha sido
+                                       realizado, o estorno será
+                                       processado conforme as condições
+                                       da sua instituição financeira.
+                                   </p>
+                               </td>
+                           </tr>
+                       </table>
+                   </td>
+               </tr>
+
+               <!-- Rodapé -->
+               <tr>
+                   <td align="center"
+                       style="background:#f1f5f9; padding:22px;">
+                       <p style="color:#64748b; font-size:12px;
+                                 margin:0;">
+                           Obrigado por escolher a BlueFood!
+                       </p>
+
+                       <p style="color:#94a3b8; font-size:11px;
+                                 margin:10px 0 0;">
+                           Este é um e-mail automático.
+                           Não responda a esta mensagem.
+                       </p>
+
+                       <p style="color:#94a3b8; font-size:11px;">
+                           © 2026 BlueFood. Todos os direitos reservados.
+                       </p>
+                   </td>
+               </tr>
+
+           </table>
+
+       </td>
+   </tr>
+</table>
+
+</body>
+</html>

@@ -53,7 +53,6 @@ public class SmtpEnvioEmailService implements EnvioEmailService {
 			helper.setFrom(emailProperties.getRemetente());
 			mailSender.send(mimeMessage);
 		} catch (Exception exception) {
-			System.out.println(exception);
 			throw new EmailException("Não foi possível enviar o e-mail");
 		}
 		
@@ -68,7 +67,6 @@ public class SmtpEnvioEmailService implements EnvioEmailService {
 			return FreeMarkerTemplateUtils
 					.processTemplateIntoString(template, mensagem.getVariaveis());
 		} catch (Exception e) {
-			System.out.println(e);
 			throw new EmailException("Não foi possível montar o template do e-mail", e);
 		}	
 	}

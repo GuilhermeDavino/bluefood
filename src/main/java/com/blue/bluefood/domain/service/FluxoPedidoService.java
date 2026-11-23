@@ -28,11 +28,13 @@ public class FluxoPedidoService {
 	public void entregar(String codigoPedido) {
 		var pedido = pedidoService.buscarOuFalhar(codigoPedido);
 		pedido.entregar();
+		pedidoRepository.save(pedido);
 	}
 	
 	@Transactional
 	public void cancelar(String codigoPedido) {
 		var pedido = pedidoService.buscarOuFalhar(codigoPedido);
 		pedido.cancelar();
+		pedidoRepository.save(pedido);
 	}
 }

@@ -1,0 +1,200 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Pedido Entregue - BlueFood</title>
+</head>
+
+<body style="margin:0; padding:0; background-color:#f1f5f9;
+            font-family:Arial, Helvetica, sans-serif;">
+
+<table width="100%" cellpadding="0" cellspacing="0"
+      border="0" style="padding:30px 10px;">
+   <tr>
+       <td align="center">
+
+           <table width="600" cellpadding="0" cellspacing="0"
+                  border="0" style="max-width:600px; background:#ffffff;
+                  border-radius:12px; overflow:hidden;">
+
+               <!-- Cabeçalho -->
+               <tr>
+                   <td align="center"
+                       style="background:#1769D2; padding:28px;">
+                       <h1 style="margin:0; color:#ffffff;
+                                  font-size:28px;">
+                           BlueFood
+                       </h1>
+
+                       <p style="margin:6px 0 0; color:#DCEBFF;
+                                 font-size:12px;">
+                           SUA EXPERIÊNCIA É NOSSA PRIORIDADE
+                       </p>
+                   </td>
+               </tr>
+
+               <!-- Conteúdo -->
+               <tr>
+                   <td style="padding:35px 30px;">
+
+                       <!-- Status -->
+                       <table width="100%" cellpadding="0"
+                              cellspacing="0">
+                           <tr>
+                               <td align="center">
+                                   <div style="background:#E5F8ED;
+                                               width:65px; height:65px;
+                                               line-height:65px;
+                                               border-radius:50%;
+                                               color:#16A34A;
+                                               font-size:35px;">
+                                       &#10003;
+                                   </div>
+
+                                   <h2 style="color:#172B4D;
+                                              font-size:24px;
+                                              margin:20px 0 10px;">
+                                       Pedido entregue!
+                                   </h2>
+                               </td>
+                           </tr>
+                       </table>
+
+                       <p style="color:#64748b; font-size:15px;
+                                 line-height:1.6; text-align:center;">
+                           Olá, ${pedido.cliente.nome}!
+
+                           <br><br>
+
+                           Temos uma ótima notícia: seu pedido chegou
+                           ao destino!
+
+                           Esperamos que aproveite sua refeição.
+                       </p>
+
+                       <!-- Informações do pedido -->
+                       <table width="100%" cellpadding="0"
+                              cellspacing="0"
+                              style="background:#f1f6fd;
+                                     border-radius:8px;
+                                     padding:20px;
+                                     margin:25px 0;">
+
+                           <tr>
+                               <td style="padding:8px 0; color:#64748b;">
+                                   Pedido
+                               </td>
+                               <td align="right"
+                                   style="color:#1769D2;
+                                          font-weight:bold;">
+                                   #${pedido.codigo}
+                               </td>
+                           </tr>
+
+                           <tr>
+                               <td style="padding:8px 0; color:#64748b;">
+                                   Restaurante
+                               </td>
+                               <td align="right"
+                                   style="color:#172B4D;">
+                                   ${pedido.restaurante.nome}
+                               </td>
+                           </tr>
+
+                           <tr>
+                               <td style="padding:8px 0; color:#64748b;">
+                                   Data da entrega
+                               </td>
+                               <td align="right"
+                                   style="color:#172B4D;">
+                                   ${dataEntrega}
+                               </td>
+                           </tr>
+
+                           <tr>
+                               <td style="padding:8px 0; color:#64748b;">
+                                   Valor total
+                               </td>
+                               <td align="right"
+                                   style="color:#172B4D;
+                                          font-weight:bold;">
+                                   R$ ${pedido.valorTotal}
+                               </td>
+                           </tr>
+                       </table>
+
+                       <!-- Confirmação -->
+                       <table width="100%" cellpadding="0"
+                              cellspacing="0"
+                              style="background:#E5F8ED;
+                                     border-radius:8px;
+                                     margin-top:25px;">
+                           <tr>
+                               <td style="padding:18px;">
+                                   <strong style="color:#16A34A;">
+                                       &#10003; Entrega concluída
+                                   </strong>
+
+                                   <p style="color:#287348;
+                                             font-size:13px;
+                                             line-height:1.6;
+                                             margin-bottom:0;">
+                                       Seu pedido foi entregue com sucesso.
+                                       Agora é só aproveitar!
+                                   </p>
+                               </td>
+                           </tr>
+                       </table>
+
+                       <!-- Avaliação -->
+                       <h3 style="color:#172B4D;
+                                  font-size:17px;
+                                  text-align:center;
+                                  margin-top:30px;">
+                           Gostou da experiência?
+                       </h3>
+
+                       <p style="color:#64748b;
+                                 font-size:13px;
+                                 line-height:1.6;
+                                 text-align:center;">
+                           Sua opinião é muito importante para nós.
+                           Ajude-nos a melhorar!
+                       </p>
+                   </td>
+               </tr>
+
+               <!-- Rodapé -->
+               <tr>
+                   <td align="center"
+                       style="background:#f1f5f9; padding:22px;">
+
+                       <p style="color:#64748b;
+                                 font-size:12px; margin:0;">
+                           Obrigado por escolher a BlueFood!
+                       </p>
+
+                       <p style="color:#94a3b8;
+                                 font-size:11px; margin:10px 0 0;">
+                           Este é um e-mail automático.
+                           Não responda a esta mensagem.
+                       </p>
+
+                       <p style="color:#94a3b8; font-size:11px;">
+                           © 2026 BlueFood. Todos os direitos reservados.
+                       </p>
+
+                   </td>
+               </tr>
+
+           </table>
+
+       </td>
+   </tr>
+</table>
+
+</body>
+</html>

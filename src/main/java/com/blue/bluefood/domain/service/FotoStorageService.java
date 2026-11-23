@@ -22,7 +22,7 @@ public interface FotoStorageService {
 		}
 	}
 	
-	default String geralNomeArquivo(String nomeOriginal) {
+	default String gerarNomeArquivo(String nomeOriginal) {
 		return UUID.randomUUID() + "_" + nomeOriginal;
 	}
 	

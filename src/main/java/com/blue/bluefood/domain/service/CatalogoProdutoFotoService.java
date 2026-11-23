@@ -25,7 +25,7 @@ public class CatalogoProdutoFotoService {
 	public FotoProduto salvar(FotoProduto foto, InputStream inputStream) {
 		Long restauranteId = foto.getRestauranteId();
 		Long produtoId = foto.getProduto().getId();
-		String novoNomeArquivo = fotoStorageService.geralNomeArquivo(foto.getNomeArquivo());
+		String novoNomeArquivo = fotoStorageService.gerarNomeArquivo(foto.getNomeArquivo());
 		
 		var fotoProdutoExistente = repository
 				.findFotoById(produtoId, restauranteId);
